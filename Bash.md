@@ -10,13 +10,13 @@
 `str=abc`
 
 #### 变量名使用
-`\$str`
+`$str`
 
 #### `for` 循环
 ```
 for i in a b c
 do
-    echo \$i
+    echo $i
 done
 ```
 
@@ -24,7 +24,7 @@ done
 ```
 for i in *
 do
-    echo \$i
+    echo $i
 done
 ```
 
@@ -33,7 +33,7 @@ done
 t=1
 while read line
 do
-    echo \$t \$line
+    echo $t $line
     ((t++))
 done < a.txt
 ```
@@ -42,11 +42,11 @@ done < a.txt
 ```
 for i in `ls root/data`
 do
-    if [ -d root/data/\$i] #判断是否是子文件夹
+    if [ -d root/data/$i] #判断是否是子文件夹
     then
-        echo \$i is dir
+        echo $i is dir
     else
-        echo \$i is file
+        echo $i is file
     fi
 done
 ```
@@ -55,14 +55,14 @@ done
 ```
 for ((i=0;i<10;i++))
 do
-    echo \$i
+    echo $i
 done
 ```
 
 #### 有关字符串操作
-`s1=\${str%_*}` #从左往右，取字符串 `str` 中第一个 `'_'` 前的子串
+`s1=${str%_*}` #从左往右，取字符串 `str` 中第一个 `'_'` 前的子串
 
-`s2=\${str#*_}` #从右往左，取字符串 `str` 中第一个 `'_'` 后的子串
+`s2=${str#*_}` #从右往左，取字符串 `str` 中第一个 `'_'` 后的子串
 
 [Bash 字符串操作小结](http://www.cnblogs.com/frydsh/p/3261012.html)
 
@@ -113,7 +113,7 @@ done
 * 2 表示用法不当（Incorrect Usage）
 * 127 表示命令没有找到（Command Not Found）
 * 126 表示不是可执行的（Not an executable）
-* \>=128 信号产生
+* >=128 信号产生
 
 #### 运算操作
 一般使用 `let` 和 `expr` 这两个指令来实现。
@@ -121,10 +121,10 @@ done
 #### 变量 i 加 1 的几种写法：
 ```
 ((i++))
-let i=\$i+1
-let "i = \$i + 1"
-i=`expr \$i + 1`
-if ((\$t%2 == 0)) #判断 t 能否被 2 整除
+let i=$i+1
+let "i = $i + 1"
+i=`expr $i + 1`
+if (($t%2 == 0)) #判断 t 能否被 2 整除
 ```
 
 #### LeetCode 193. Valid Phone Numbers
@@ -148,7 +148,6 @@ if ((\$t%2 == 0)) #判断 t 能否被 2 整除
 
 考查 Bash 的正则表达式匹配，参考代码如下：
 ```
-cat file.txt | grep -Eo '^\([0-9]{3}\) [0-9]{3}-[0-9]{4}\$|^([0-9]{3}-){2}[0-9]{4}
-$'
+cat file.txt | grep -Eo '^\([0-9]{3}\) [0-9]{3}-[0-9]{4}$|^([0-9]{3}-){2}[0-9]{4}$'
 ```
 --------
