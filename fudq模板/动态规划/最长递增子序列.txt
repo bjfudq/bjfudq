@@ -1,0 +1,88 @@
+子序列是指从给定字符序列中随意地（不一定连续）去掉若干个字符后形成的字符序列。
+递增子序列，自然就是要求子序列是递增的。
+例：
+有这么一个序列，求其的最长上升子序列：  
+15  45  25  28  12  30
+
+解法：
+将原来的序列存在一个数组f[ ]里；
+建立一个数组a，初始化都为0，a[i]表示的是以f[i]为最后一个数的上升子序列的长度；
+则可以从i=0开始遍历，a[i]应该是所有满足f[i]>f[k]中a[k]+1最大的数，其中k满足0<=k<=i-1;
+填完数组之后，求数组的最大值即可 
+
+对上述的例子，
+a[0]=1;
+a[1]=2;(45大于15)；
+a[2]=2;(25大于15，但不大于45)；
+a[3]=3;(28大于15，大于25，但不大于45，在15和25中，因为25对应的a[2]较大，所以选择25)
+…………
+以此类推即可。 
+
+参考代码：
+int n,a[N],dp[N],res[N];
+
+int LIS()
+{
+	res[0]=1;
+	for(int i=1;i<n;i++)
+	{
+		int mx=0;
+		for(int j=0;j<i;j++)
+		{
+			if(a[i]>a[j] && res[j]>mx)
+				mx=res[j];
+		}
+		res[i]=mx+1;
+	}
+	int s=-INF;
+	for(int i=0;i<n;i++)
+		if(res[i]>s)
+			s=res[i];
+	return s;
+}
+
+
+
+最长递增子序列O(nlogn)算法：
+//dp[i]记录长度为i的LIS的最小末尾值
+int n,a[N],dp[N];
+
+int LIS()
+{
+    dp[1]=a[1];
+    int len=1;
+    for(int i=2;i<=n;i++)
+    {
+        if(a[i] > dp[len])
+            dp[++len]=a[i];
+        else
+        {
+        	int lef=1,rig=len;
+        	while(lef < rig)
+        	{
+        		int mid=(lef+rig)>>1;
+        		if(a[i] > dp[mid]) lef=mid+1;
+        		else rig=mid;
+        	}
+        	dp[lef]=a[i];
+        }
+    }
+    return len;
+}
+
+
+void solve()
+{
+	scanf("%d",&n);
+	for(int i=1;i<=n;i++)
+		scanf("%d",&a[i]);
+	printf("%d\n",LIS());
+//	for(int i=1;i<=n;i++)
+//		printf("%d ",dp[i]);
+//	pfn;
+}
+
+
+关于LIS很重要的定理：
+Dilworth定理：对于一个偏序集，最少链划分等于最长反链长度。
+Dilworth定理的对偶定理：对于一个偏序集，其最少反链划分数等于其最长链的长度。

@@ -1,0 +1,56 @@
+//逆序数：任意1<=i<j<=n,有ai>aj
+//逆序数的个数就是序列离最优序列（序列升序）相差的相邻交换次数
+//求个数注意范围
+
+int f[N],arrcopy[N];
+int Merge(int * arr, int beg, int mid, int end, int * tmp_arr)
+{
+    memcpy(tmp_arr+beg,arr+beg,sizeof(int)*(end-beg+1));
+    int i = beg;
+    int j = mid + 1;
+    int k = beg;
+    int inversion = 0;  // 合并过程中的逆序数
+    while(i <= mid && j <= end)
+    {
+        if(tmp_arr[i] <= tmp_arr[j])
+            arr[k++] = tmp_arr[i++];
+        else
+        {
+            arr[k++] = tmp_arr[j++];
+            inversion += (mid - i + 1);
+        }
+    }
+    while(i <= mid)
+        arr[k++] = tmp_arr[i++];
+    while(j <= end)
+        arr[k++] = tmp_arr[j++];
+    return inversion;
+}
+
+int MergeInversion(int * arr, int beg, int end, int * tmp_arr)
+{
+    int inversions = 0;    // 记录倒序数
+    if(beg < end)
+    {
+        int mid = (beg + end) >> 1;
+        inversions += MergeInversion(arr, beg, mid, tmp_arr);
+        inversions += MergeInversion(arr, mid+1, end, tmp_arr);
+        inversions += Merge(arr, beg, mid, end, tmp_arr);
+    }
+    return inversions;
+}
+
+
+int main()
+{
+    int n;
+    LL k;
+    while(sf(n)!=EOF)
+    {
+        fr(n) sf(f[i]);
+        memcpy(arrcopy,f,n);
+        int cnt=MergeInversion(f,0,n-1,arrcopy);
+	pf(cnt);
+    }
+    return 0;
+}

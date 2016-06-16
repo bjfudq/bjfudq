@@ -1,0 +1,59 @@
+//hdu1241给出一个二维矩阵，看有多少个'@'的块
+#include<iostream>
+#include<queue>
+using namespace std;
+#define N 10050
+int dir[8][2] = { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 }, { 1, 1 }, { -1, 1 },{ 1, -1 }, { -1, -1 } };
+struct Point{
+    int x,y;
+};
+queue<Point> q;
+Point point, point1, point2;
+char c[105][105];
+bool vis[105][105];
+
+void bfs(int x1, int y1)
+{
+    int i;
+    point.x = x1;
+    point.y = y1;
+    vis[x1][y1] = true;
+    q.push(point);
+    while (!q.empty())
+    {
+        point1 = q.front();
+        q.pop();
+        for (i = 0; i < 8; i++)
+        {
+            point2.x = point1.x + dir[i][0];
+            point2.y = point1.y + dir[i][1];
+            if (point2.x >= 0 && point2.y >= 0 && c[point2.x][point2.y] == '@'&& !vis[point2.x][point2.y])
+            {
+                q.push(point2);
+                vis[point2.x][point2.y] = true;
+            }
+        }
+    }
+}
+
+int main()
+{
+    int m, n, i, j, temp;
+    while (scanf("%d%d", &m, &n) != EOF && (m||n))
+    {
+        temp = 0;
+        memset(vis, false, sizeof(vis));
+        for (i = 0; i < m; i++)
+            for (j = 0; j < n; j++)
+                scanf("%s", c[i]);
+        for (i = 0; i < m; i++)
+            for (j = 0; j < n; j++)
+                if (c[i][j] == '@' && !vis[i][j])
+                {
+                    bfs(i, j);
+                    temp++;
+                }
+        printf("%d\n", temp);
+    }
+    return 0;
+}

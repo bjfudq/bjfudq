@@ -1,0 +1,92 @@
+/*
+ * hdu 2586
+ * n 个点，n-1 条有权值边，q 个询问，问任意两点的距离
+ */
+struct Edge{
+	int v,w,next;
+}edge[N*2];
+struct Node{
+	int id,to;		//id 记录第几次询问
+	Node(int x_id,int x_to){
+		id=x_id;
+		to=x_to;
+	}
+};
+int n,m;
+int e,head[N];
+int vis[N],fa[N],dis[N],ans[N];		//dis[] 记录树根到点距离，ans[] 记录询问结果
+vector<Node>que[N];		//记录询问
+
+void init() {
+	e=0;
+	for(int i=1;i<=n;i++){
+		head[i]=-1;
+		vis[i]=0;
+		dis[i]=0;
+		fa[i]=i;
+		que[i].clear();
+	}
+}
+
+void add(int u,int v,int w){
+	edge[e].v=v;
+	edge[e].w=w;
+	edge[e].next=head[u];
+	head[u]=e++;
+}
+
+int Find(int x) {
+	return x==fa[x]?x:fa[x]=Find(fa[x]);
+}
+
+void Merge(int x,int y) {
+	int fx=Find(x);
+	int fy=Find(y);
+	if(fx != fy){
+		fa[fy]=fx;
+	}
+}
+
+/*
+ * 当查询到当前点 u 时，则 u 和其子树的 lca 就是 u，用并查集合并
+ * 同理，u 的父结点和 u 的兄弟结点的 lca 就是 u 的父结点了
+ * 用同样方法更新子树
+ */
+
+void Tarjan(int u,int step) {
+	dis[u]=step;
+	vis[u]=1;
+	for(int i=head[u];i!=-1;i=edge[i].next){
+		int t=edge[i].v;
+		if(vis[t]) continue;
+		Tarjan(t,step+edge[i].w);
+		Merge(u,t);
+	}
+	//计算与 u 相关的查询
+	int tot=(int)que[u].size();
+	for(int i=0;i<tot;i++){
+		int t=que[u][i].to;
+		if(!vis[t]) continue;
+		ans[que[u][i].id]=dis[u]+dis[t]-2*dis[Find(t)];		//两点距离等于根到两点距离和减 2 倍根到 lca 距离
+	}
+}
+
+void solve(){
+	int a,b,c;
+	sf2(n,m);
+	init();
+	fr(n-1) {
+		scanf("%d%d%d",&a,&b,&c);
+		add(a,b,c);
+		add(b,a,c);
+	}
+	fr(m){
+		sf2(a,b);
+		que[a].push_back(Node(i,b));
+		que[b].push_back(Node(i,a));
+	}
+	Tarjan(1,0);
+	for(int i=0;i<m;i++){
+		printf("%d\n",ans[i]);
+	}
+}

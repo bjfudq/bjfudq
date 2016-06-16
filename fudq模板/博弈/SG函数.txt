@@ -1,0 +1,45 @@
+定义：对于一个递增有界的图G(X, F)来说，SG函数式定义在X上的函数，函数值是非负整数。
+g(x)的值等于x的所有后继SG函数值中没有出现过的最小非负整数。
+对于递增有界的图，SG函数是唯一的、有界的。
+所有的终止状态x，g(x)=0。
+
+SG函数的几条性质：
+如果x是终止状态，那么g(x)=0;
+一个状态x，如果g(x)≠0，那么一定存在一个x的后继y，使得g(y)=0;
+一个状态x，如果g(x)=0,那么所有x的后继y，都有g(y)≠0.
+
+//hdu1536&1944
+int s[110],f[10010];
+
+int sg(int a,int k)
+{
+	bool mex[110];
+	MEM(mex);
+	if(f[a] >= 0)	return f[a];
+	if(a < s[0])	return f[a]=0;
+	for(int i=0;i<k && a>=s[i];i++)
+		mex[sg(a-s[i],k)]=1;
+	int i=0;
+	while(mex[i]) i++;
+	return f[a]=i;
+}
+
+void solve(int k)
+{
+	int n,ans,h;
+	for(int i=0;i<k;i++)
+		scanf("%d",&s[i]);
+	sort(s,s+k);
+	memset(f,-1,sizeof(f));
+	scanf("%d",&n);
+	ans=0;
+	for(int i=0;i<n;i++)
+	{
+		scanf("%d",&h);
+		ans=ans^sg(h,k);
+	}
+	if(!ans)
+		printf("No\n");
+	else
+		printf("Yes");
+}

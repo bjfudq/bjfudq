@@ -1,0 +1,61 @@
+int plen,p[N];
+//分解质因子
+void Getfac(int n)
+{
+	plen=0;
+	for(int i=0;prime[i]*prime[i] <= n ;i++)
+	{
+		if(n%prime[i] == 0)
+		{
+			p[plen++]=prime[i];
+			while(n%prime[i] == 0)
+				n/=prime[i];
+		}
+		if(n == 1)
+			break;
+	}
+	if(n > 1)
+		p[plen++]=n;
+}
+
+//容斥原理求解区间[1,n]内与m不互质个数
+int dfs(int tmp,int n)
+{
+	int s=0;
+	for(int i=tmp;i<plen;i++)
+		s=s+n/p[i]-dfs(i+1,n/p[i]);
+	return s;
+}
+
+//容斥原理求解区间[1,n]内与m不互质数之和(tmp表示当前位，num表示当前因子，c表示当前因子数，n表示区间最大值，plen和p[]见函数分解质因子)
+int ans;
+void dfs(int tmp,int num,int c,int n)
+{
+	int t,tt;
+	for(int i=tmp;i<plen;i++)
+	{
+		if(num*p[i] <= n)
+		{
+			tt=num*p[i];
+			t=n/tt;
+			t=tt*t+t*(t-1)/2*tt;
+			if((c+1) & 1)
+				ans+=t;
+			else
+				ans-=t;
+			dfs(i+1,num*p[i],c+1,n);
+		}
+	}
+}
+
+void work(int n,int m)
+{
+	Getfac(m);
+	int res=dfs(0,n);
+	//res为区间[1,n]内与m不互质个数，n-res为互质个数
+
+	ans=0;
+	dfs(0,1,0,n);
+	//ans为区间[1,n]内与m不互质数之和
+	//所有互质数和=sigma(1,n)-ans
+}

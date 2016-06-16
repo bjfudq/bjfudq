@@ -1,0 +1,49 @@
+//边带权值的无向联通图
+//u表示直径端点，ans表示树的直径d
+//无向图边大小开两倍
+
+struct Edge{
+	int v,w,next;
+}edge[N*2];
+int n,m;
+int e,head[N];
+int ans,u;
+
+void init(){
+	memset(head,-1,sizeof(head));
+	e=0;
+}
+
+void add(int u,int v,int w){
+	edge[e].v=v;
+	edge[e].w=w;
+	edge[e].next=head[u];
+	head[u]=e++;
+}
+
+void dfs(int tmp,int pre,int step) {
+	if(step > ans){
+		ans=step;
+		u=tmp;
+	}
+	for(int i=head[tmp];i!=-1;i=edge[i].next){
+		if(edge[i].v != pre)		//保证往下级搜索
+			dfs(edge[i].v,tmp,step+edge[i].w);
+	}
+}
+
+void solve() {
+	scanf("%d%d",&n,&m);
+	init();
+	int a,b,c;
+	fr(m){
+		scanf("%d%d%d",&a,&b,&c);
+		add(a,b,c);
+		add(b,a,c);
+	}
+	ans=-1;
+	dfs(1,-1,0);
+	ans=-1;
+	dfs(u,-1,0);
+	pf(ans);	
+}

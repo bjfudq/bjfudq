@@ -1,0 +1,62 @@
+参考贾志豪的《组合游戏略述——浅谈SG游戏的若干拓展及变形》。
+Every-SG 游戏定义：
+还没有结束的单一游戏，游戏者必须做出决策，规则与普通SG游戏相同。即N组SG游戏同时进行。
+游戏策略：
+对于单一游戏，如果能赢，则希望玩的时间越久越好；如果为输，则希望玩的时间越短越好。
+所以，我们需要知道的是：单一游戏如果为赢，最长能玩多久到终止状态；如果为输，最短能玩多久到终止状态。
+我们用step(v)来表示这个值，则有：
+step(v)=0,   v为终止状态
+step(v)=max(step(u))+1,   sg(v)>0 && sg(u)=0
+step(v)=min(step(u))+1,   sg(v)=0, u为v的后继状态.
+
+【Every-SG定理】
+先手必胜当且仅当单一游戏中最大的step为奇数。
+
+//hdu 3595
+有N个游戏同时进行，每个游戏有两堆石子，每次从个数多的堆中取走数量小的数量的整数倍的石子。不能取为输，N个游戏同时进行，每个游戏必须操作，除非游戏结束。
+int f[1010][1010];
+int step[1010][1010];
+
+int sg(int a,int b)
+{
+	if(a > b) swap(a,b);
+	if(f[a][b] != -1)
+		return f[a][b];
+	if(a==0 || b==0)
+		return step[a][b]=step[b][a]=f[a][b]=f[b][a]=0;
+	int mn=INF,mx=-INF;
+	for(int k=1;k*a <= b;k++)
+	{
+		if(sg(a,b-k*a) == 0)
+			mx=max(mx,step[a][b-k*a]);
+		else
+			mn=min(mn,step[a][b-k*a]);
+	}
+	if(mx != -INF)
+	{
+		step[a][b]=step[b][a]=mx+1;
+		return f[a][b]=f[b][a]=1;
+	}
+	step[a][b]=step[b][a]=mn+1;
+	return f[a][b]=f[b][a]=0;
+}
+
+int main()
+{
+    int n,a,b;
+    memset(f,-1,sizeof(f));
+    while(sf(n)!=EOF)
+    {
+    	int ans=0;
+    	while(n--)
+    	{
+    		sf2(a,b);
+    		sg(a,b);
+    		ans=max(ans,step[a][b]);
+    	}
+    	if(ans&1) pfs("MM");
+    	else pfs("GG");
+    }
+    return 0;
+}
+

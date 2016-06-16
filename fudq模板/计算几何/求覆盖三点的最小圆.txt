@@ -1,0 +1,53 @@
+/*
+ * 已知三点，求覆盖三点的最小圆
+ * 如果三点构成的三角形是钝角三角形，则圆的直径为三条边的最大值；
+ * 否则，圆为三角形的外接圆
+ */
+
+struct Point{
+    double x,y;
+}p[5];
+
+double dist(Point p1,Point p2){
+    return (p1.x-p2.x)*(p1.x-p2.x)+(p1.y-p2.y)*(p1.y-p2.y);
+}
+
+void solve()
+{
+	//cen求得圆的圆心，r求得圆的半径
+	Point cen;
+    double r;
+    double t1=dist(p[0],p[1]);
+    double t2=dist(p[1],p[2]);
+    double t3=dist(p[0],p[2]);
+    double tmp=Max(t1,t2,t3);
+    if(tmp >= t1+t2+t3-tmp)//判断是不是钝角三角形
+    {
+        if(tmp == t1)
+        {
+            cen.x=(p[0].x+p[1].x)/2;
+            cen.y=(p[0].y+p[1].y)/2;
+        }
+        else if(tmp == t2)
+        {
+            cen.x=(p[1].x+p[2].x)/2;
+            cen.y=(p[1].y+p[2].y)/2;
+        }
+        else
+        {
+            cen.x=(p[0].x+p[2].x)/2;
+            cen.y=(p[0].y+p[2].y)/2;
+        }
+        r=sqrt(tmp)/2;
+    }
+    else	//利用公式求外接圆的圆心
+    {
+        double k1=(p[0].y-p[1].y)/(p[0].x-p[1].x);
+        double k2=(p[0].y-p[2].y)/(p[0].x-p[2].x);
+        double u=(p[0].x*p[0].x-p[1].x*p[1].x+p[0].y*p[0].y-p[1].y*p[1].y)/(2*p[0].x-2*p[1].x);
+        double v=(p[0].x*p[0].x-p[2].x*p[2].x+p[0].y*p[0].y-p[2].y*p[2].y)/(2*p[0].x-2*p[2].x);
+        cen.x=v-(u-v)*k2/(k1-k2);
+        cen.y=(u-v)/(k1-k2);
+        r=sqrt(p[0],cen);
+    }
+}

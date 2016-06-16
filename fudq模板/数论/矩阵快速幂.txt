@@ -1,0 +1,45 @@
+int n;	//矩阵v的维度
+struct Matrix{
+	LL v[N][N];
+};
+
+Matrix Mat_mul(Matrix m1,Matrix m2)	//矩阵相乘
+{
+	Matrix c;
+	MEM(c.v);
+	for(int i=0;i<n;i++)
+		for(int j=0;j<n;j++)
+			for(int k=0;k<n;k++)
+				c.v[i][j]=(c.v[i][j]+(m1.v[i][k]*m2.v[k][j])%MOD)%MOD;
+	return c;
+}
+
+Matrix Mpow(Matrix A,int nn)	//矩阵快速幂
+{
+	Matrix c,x=A;
+	MEM(c.v);
+	for(int i=0;i<n;i++)
+		c.v[i][i]=1;
+	while(nn >= 1)
+	{
+		if(nn & 1)
+			c=Mat_mul(c,x);
+		nn>>=1;
+		x=Mat_mul(x,x);
+	}
+	return c;
+}
+
+//定义01矩阵tmp
+void init(Matrix &tmp)
+{
+	MEM(tmp.v);
+	//tmp.v[0][0]=3;tmp.v[0][1]=1;tmp.v[1][0]=1;tmp.v[1][1]=0;
+}
+
+void work(int nn)
+{
+	Matrix tmp,ans;
+	init(tmp);
+	ans=Mpow(tmp,nn);
+}

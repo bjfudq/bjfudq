@@ -1,0 +1,22 @@
+const int MN=505,MV=15005;
+LL c[MV][MN];
+
+void initcom()	//c(n, i) == c[n][i]
+{
+	memset(c,0,sizeof(c));
+	for(int i=0;i<MV;i++)
+		c[i][0]=1;
+	c[1][1]=1;
+	for(int i=2;i<MV;i++)
+	{
+		for(int j=1;j<MN;j++)
+		{
+			if(j == i)
+			{
+				c[i][j]=1;
+				break;
+			}
+			c[i][j]=(c[i-1][j-1]+c[i-1][j])%MOD;
+		}
+	}
+}

@@ -1,0 +1,20 @@
+struct point{
+	double x, y;
+};
+struct line{
+	point a, b;
+};
+
+double xmulti(point p1,point p2,point p0){
+	return((p1.x-p0.x) * (p2.y-p0.y) - (p2.x-p0.x)*(p1.y-p0.y));
+}
+
+int lsinterls(line u,line v)
+{
+	return( (Max(u.a.x,u.b.x)>=Min(v.a.x,v.b.x))&&
+			(Max(v.a.x,v.b.x)>=Min(u.a.x,u.b.x))&&
+			(Max(u.a.y,u.b.y)>=Min(v.a.y,v.b.y))&&
+			(Max(v.a.y,v.b.y)>=Min(u.a.y,u.b.y))&&
+			(xmulti(v.a,u.b,u.a)*xmulti(u.b,v.b,u.a)>=0)&&
+			(xmulti(u.a,v.b,v.a)*xmulti(v.b,u.b,v.a)>=0));
+}

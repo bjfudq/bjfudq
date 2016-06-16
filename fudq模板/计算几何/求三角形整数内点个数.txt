@@ -1,0 +1,24 @@
+/*
+ * 求三角形内坐标为整数的点个数，不包含边和顶点
+ * point存三角形坐标，这里3个点为(0,0),(n,m),(p,0)
+ */
+
+struct Point{
+	int x,y;
+}point[3];
+int n,m,p;
+int gcd(int a,int b){return b?gcd(b,a%b):a;}
+double triangle_area(Point t[]) {
+	return fabs(t[0].x*t[1].y+t[1].x*t[2].y+t[2].x*t[0].y-t[1].x*t[0].y-t[2].x*t[1].y-t[0].x*t[2].y)/2;
+}
+
+int solve(int n,int m,int p){
+	int t1=gcd(n,m);
+	int t2=gcd(abs(n-p),m);
+	int t3=p;
+	point[0].x=0;point[0].y=0;
+	point[1].x=n;point[1].y=m;
+	point[2].x=p;point[2].y=0;
+	double area=triangle_area(point);
+	return (int)(area-(t1+t2+t3)/2+1);
+}

@@ -1,0 +1,64 @@
+问n<=10^18是否能被一个数的平方整除
+将n分解为：p1p2pk  其中pi为素数，且pi<=pi+1（这里可以等于）
+若n能被一个数的平方整除，它肯定能被一个素因子的平方p^2整除，我们找到最小的这个p即可
+1.如果p不是最后的素因子，在p之后的素数pi>=p，这时就有n>=p^3了，
+  即p<=n^(1/3)，所以枚举n^(1/3)内的素数看是否p^2|n即可，而n^(1/3)<=10^6
+2.如果p是最后的素因子，所以n的形式就是p1p2p'p^2，而p'<=p，所以P'^3<=n，p'<=n^(1/3)
+  所以可以先将n的这些素因子p1,p2,,p'给去掉，p'<=n^(1/3)，所以用n^(1/3)内的素数去除即可
+  最后只剩下n'=p^2，通过判断一个数是否为完全平方数即可
+
+算法就是预处理10^6内的素数，用这些素数去除n，发现有p^2能整除的return即可
+否则判断剩下的这个n'是否为完全平方数
+
+
+int tot,prime[N+10];
+int f[N+10];
+void Getprime()
+{
+	memset(f,0,sizeof(f));
+	tot=0;
+	for(int i=2;i<=N;i++)
+	{
+		if(f[i] == 0)
+			prime[tot++]=f[i]=i;
+		for(int j=0;j<tot && prime[j]<=f[i] && i*prime[j]<=N;j++)
+			f[i*prime[j]]=prime[j];
+	}
+}
+
+int jud(LL n)
+{
+	LL a=(LL)sqrt(n*1.0);
+	if(a*a == n) return 1;
+	return 0;
+}
+
+
+int fun(LL n)
+{
+	for(int i=0;i<tot && prime[i]*prime[i]*prime[i]<=n;i++)
+	{
+		int c=0;
+		while(n%prime[i]==0)
+		{
+			n/=prime[i];
+			c++;
+			if(c >= 2) return 1;
+		}
+	}
+	if(jud(n)) return 1;
+	return 0;
+}
+
+
+int main()
+{
+    LL n;
+    Getprime();
+    while(sf64(n)!=EOF)
+    {
+    	if(fun(n)) pfs("Yes");
+    	else pfs("No");
+    }
+    return 0;
+}

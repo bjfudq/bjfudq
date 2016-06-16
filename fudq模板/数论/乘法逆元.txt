@@ -1,0 +1,55 @@
+/*
+ * 当要求(a/b)%p的值,由于除法没有同余公式,要用乘法逆元改成可同余的相乘
+ * 逆元满足 k*a = 1 (mod p)
+ * b*k=p*x+1,把k带入(a*k)%p就得到(a/b)%p
+ * 扩展的欧几里德算法求乘法逆元模板
+ * (a/b) mod p = ( a*[b与p(互质)乘法逆元]k ) mod p
+ */
+#define LL long long
+LL exGcd(LL a,LL b,LL &x,LL &y)
+{
+    if(b==0)
+    {
+        x=1; y=0;
+        return a;
+    }
+    LL temp=exGcd(b,a%b,x,y);
+    LL t=x;
+    x=y;
+    y=t-a/b*y;
+    return temp;
+}
+
+//求出a的逆元
+LL cal(LL a,LL p)
+{
+    LL x,y;
+    exGcd(a,p,x,y);
+    x=(x%p+p)%p;
+    return x;
+}
+
+
+/*
+ * 模板2，a的逆元是a^(p-2)，条件：p是质数，gcd(a,p)==1
+ * 由费马小定理推导:
+ * a^(p-1) ≡ 1(mod p) ==> a*a^(p-2) ≡ 1(mod p) ==> a的逆元是a^(p-2)
+ */
+LL mod_exp(LL a,LL b,LL c)
+{
+	LL ans=1;
+	while(b)
+	{
+		if(b & 1)
+			ans=ans*a%c;
+		a=a*a%c;
+		b/=2;
+	}
+	return ans;
+}
+
+//求a的逆元
+LL inv( LL a ,LL p)
+{
+    return mod_exp(a, p-2, p);
+}

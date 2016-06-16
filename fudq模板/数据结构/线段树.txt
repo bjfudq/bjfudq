@@ -1,0 +1,201 @@
+struct Node{
+    int left,right,v;
+//    int mn,mx;	//此处根据要求设定变量
+}Tree[N*3];	//N大小设为点个数三倍左右
+
+void Build(int id,int left,int right)	//建树
+{
+    Tree[id].v=0;
+    Tree[id].left=left;
+    Tree[id].right=right;
+    if(left == right)		//此处设叶子节点初始值
+    	return;
+    int mid=(left+right)>>1;
+    Build(id<<1,left,mid);
+    Build(id<<1|1,mid+1,right);
+//   Tree[id].v=min(Tree[id<<1].v,Tree[id<<1|1].v);		//此处根据要求更新Tree[id]的最值或者和
+}
+
+void Update(int id,int pos,int add)	//单点更新，pos位加上add
+{
+    int left=Tree[id].left,right=Tree[id].right;
+    if(left == right){
+        Tree[id].v+=add;
+        return;
+    }
+    int mid=(left+right)>>1;
+    if(mid>=pos)
+        Update(id<<1,pos,add);
+    else
+        Update(id<<1|1,pos,add);
+//   Tree[id].v=min(Tree[id<<1].v,Tree[id<<1|1].v);		//此处根据要求更新Tree[id]的最值或者和
+}
+
+//Insert函数和Update差不多，
+void Insert(int id,int pos,int num)	//pos位值设为num
+{
+    int left=Tree[id].left,right=Tree[id].right;
+    if(left == right)
+    {
+    	Tree[id].v=num;
+        return;
+    }
+    int mid=(left+right)>>1;
+    if(mid >= pos)
+        Insert(id<<1,pos,num);
+    else
+        Insert(id<<1|1,pos,num);
+//   Tree[id].mn=min(Tree[id<<1].mn,Tree[id<<1|1].mn);		//此处根据要求更新Tree[id]的最值或者和
+}
+
+int Query(int id,int Qleft,int Qright)	//查询区间最值或者和
+{
+    int left=Tree[id].left,right=Tree[id].right;
+    if(left >= Qleft && right <= Qright)
+    	return Tree[id].v;	//也可改成void类型函数，开全局变量更新，要学会灵活运用
+    int mid=(left+right)>>1;
+    if(mid >= Qright)
+        return Query(id<<1,Qleft,Qright);
+    else if(mid < Qleft)
+        return Query(id<<1|1,Qleft,Qright);
+    else
+    {
+    	int r1=Query(id<<1,Qleft,mid);
+    	int r2=Query(id<<1|1,mid+1,Qright);
+//    	return min(r1,r2);	//此处根据要求返回最值或者和
+    }
+}
+
+void solve()
+{
+	int n,m,k,a,b;
+	sf3(n,k,m);		//n个点，k个更新，m个查询
+	Build(1,1,n);
+	for(int i=1;i<=n;i++)	//输入初始值
+	{
+		sf(a);
+		Insert(1,i,a);	//插入初始值
+	}
+	while(k--)
+	{
+		sf2(a,b);
+		Update(1,a,b);		//a位置上的值加上b
+	}
+	while(m--)
+	{
+		sf2(a,b);
+		pf(Query(1,a,b));	//区间[a,b]的最值或者和
+	}
+}
+
+
+/*
+ * 关于线段树区间更新，不需要更新到叶子结点，只需更新到相应的线段。
+ * 设记录变量tmp，更新或者查询其子结点的时候，将tmp往下更新，更新其子节点的和以及tmp，然后把当前的结点的tmp设为0
+ * 典型例题：poj3468 给n个数，m个操作，操作一：把区间[a,b]内所有值加上c；操作二：求区间[a,b]和
+ */
+
+struct Node{
+    int left,right;
+    LL tmp,s;
+}Tree[N*3];	//N大小设为点个数三倍左右
+
+int ans;
+
+void Build(int id,int left,int right)	//建树
+{
+	Tree[id].tmp=0;
+    Tree[id].left=left;
+    Tree[id].right=right;
+    if(left == right)
+    {
+        sf64(Tree[id].s);
+    	return;
+    }
+    int mid=(left+right)>>1;
+    Build(id<<1,left,mid);
+    Build(id<<1|1,mid+1,right);
+    Tree[id].s=Tree[id<<1].s+Tree[id<<1|1].s;
+}
+
+void Update(int id,int add,int Qleft,int Qright)
+{
+	int left=Tree[id].left,right=Tree[id].right;
+	if(left >= Qleft && right <= Qright)
+	{
+		Tree[id].s+=(Tree[id].right-Tree[id].left+1)*add;
+		Tree[id].tmp+=add;
+		return ;
+	}
+	if(Tree[id].tmp)	//如果当前结点tmp不为空，则将tmp往下更新
+	{
+		Tree[id<<1].s+=(Tree[id<<1].right-Tree[id<<1].left+1)*Tree[id].tmp;
+		Tree[id<<1|1].s+=(Tree[id<<1|1].right-Tree[id<<1|1].left+1)*Tree[id].tmp;
+		Tree[id<<1].tmp+=Tree[id].tmp;
+		Tree[id<<1|1].tmp+=Tree[id].tmp;
+		Tree[id].tmp=0;
+	}
+	int mid=(left+right)>>1;
+	if(mid >= Qright)
+		Update(id<<1,add,Qleft,Qright);
+	else if(mid < Qleft)
+		Update(id<<1|1,add,Qleft,Qright);
+	else
+	{
+		Update(id<<1,add,Qleft,mid);
+		Update(id<<1|1,add,mid+1,Qright);
+	}
+	Tree[id].s=Tree[id<<1].s+Tree[id<<1|1].s;
+}
+
+LL Query(int id,int Qleft,int Qright)
+{
+    int left=Tree[id].left,right=Tree[id].right;
+    if(left >= Qleft && right <= Qright)
+    	return Tree[id].s;
+	if(Tree[id].tmp)	//如果当前结点tmp不为空，则将tmp往下更新
+	{
+		Tree[id<<1].s+=(Tree[id<<1].right-Tree[id<<1].left+1)*Tree[id].tmp;
+		Tree[id<<1|1].s+=(Tree[id<<1|1].right-Tree[id<<1|1].left+1)*Tree[id].tmp;
+		Tree[id<<1].tmp+=Tree[id].tmp;
+		Tree[id<<1|1].tmp+=Tree[id].tmp;
+		Tree[id].tmp=0;
+	}
+    int mid=(left+right)>>1;
+    if(mid >= Qright)
+        return Query(id<<1,Qleft,Qright);
+    else if(mid < Qleft)
+        return Query(id<<1|1,Qleft,Qright);
+    else
+    {
+    	LL r1=Query(id<<1,Qleft,mid);
+    	LL r2=Query(id<<1|1,mid+1,Qright);
+    	return r1+r2;
+    }
+}
+
+
+int main()
+{
+    char ss[5];
+    int n,m,a,b,c;
+    while(sf2(n,m)!=EOF && n)
+    {
+    	Build(1,1,n);
+    	while(m--)
+    	{
+    		sfs(ss);
+    		if(ss[0] == 'Q')
+    		{
+    			sf2(a,b);
+    			pf64(Query(1,a,b));
+    		}
+    		else
+    		{
+    			sf3(a,b,c);
+    			Update(1,c,a,b);
+    		}
+    	}
+    }
+    return 0;
+}

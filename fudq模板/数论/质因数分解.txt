@@ -1,0 +1,74 @@
+Pro 1：分解质因数，将数n所有因子（包括重复的）存在p数组里，个数为plen
+
+void Getfac(int n)
+{
+	plen=0;
+	for(int i=0;prime[i]*prime[i] <= n;i++)
+	{
+		if(n%prime[i] == 0)
+		{
+			p[plen++]=prime[i];
+			while(n%prime[i] == 0)
+				n/=prime[i];
+		}
+		if(n == 1)
+			break;
+	}
+	if(n > 1)
+		p[plen++]=n;
+}
+
+
+Pro 2：快速获取n的所有因子（n很大）
+
+int len_fac,len_tot;
+LL resfac[N],fac[N],pfac[N];
+
+//分解质因数，将数n的质因子（不包括重复的）记录在fac数组里，因子的幂记录在pfac数组里，个数为len_fac
+void Getfac(int n)
+{
+	int s;
+	len_fac=0;
+	for(int i=0;i<tot && prime[i]*prime[i] <= n;i++)
+	{
+		if(n%prime[i] == 0)
+		{
+			s=0;
+			while(n%prime[i] == 0)
+			{
+				n/=prime[i];
+				s++;
+			}
+			fac[len_fac]=prime[i];pfac[len_fac++]=s;
+		}
+	}
+	if(n > 1)
+	{
+		fac[len_fac]=n;
+		pfac[len_fac++]=1;
+	}
+}
+
+//dfs构造数n的所有因子并记录在resfac数组里，个数为len_tot
+void dfs(int tmp,int num)
+{
+	if(tmp == len_fac)
+	{
+		resfac[len_tot++]=num;
+		return ;
+	}
+	int tt=1;
+	for(int i=0;i<=pfac[tmp];i++)
+	{
+		dfs(tmp+1,num*tt);
+		tt=tt*fac[tmp];
+	}
+}
+
+void solve(int n)
+{
+	Getprime();//素数筛选打印素数表
+	Getfac(n);
+	len_tot=0;
+	dfs(0,1);
+}

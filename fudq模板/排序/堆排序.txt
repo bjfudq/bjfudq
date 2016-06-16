@@ -1,0 +1,37 @@
+//数组a前n个元素排序:heapsort(n,a)
+void heap(int a[],int i,int m)//调整堆的函数
+{
+	int j,x=a[i];
+	j=2*i;
+	while(j<=m)
+	{
+		if(j<m)
+			if(a[j] < a[j+1])	//'<'升序，'>'降序
+				j++;
+		if(a[j] > x)	//'>'升序，'<'降序(与上面一起改)
+		{
+			a[i]=a[j];
+			i=j;
+			j=2*i;
+		}
+		else
+			j=m+1;
+	}
+	a[i]=x;
+}
+
+void heapsort(int n,int a[])
+{
+	int i,v;
+	for(i=n;i>0;i--)
+		a[i]=a[i-1];
+	for(i=n/2;i>=1;i--)
+		heap(a,i,n);
+	for(v=n;v>=2;v--)
+	{
+		swap(a[1],a[v]);
+		heap(a,1,v-1);
+	}
+	for(i=0;i<n;i++)
+		a[i]=a[i+1];
+}

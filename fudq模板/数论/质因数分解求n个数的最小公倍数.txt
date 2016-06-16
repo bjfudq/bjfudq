@@ -1,0 +1,68 @@
+题面：
+给n个数ai，求n个数的最小公倍数s，求s%M的结果。ai,n<=10^6，M=3*2^30+1.
+
+#define M 3221225473ll
+int n,f[N];
+int p[N];
+int tot,prime[NN+10],ff[NN+10];
+void Getprime()
+{
+	memset(ff,0,sizeof(ff));
+	tot=0;
+	for(int i=2;i<=NN;i++)
+	{
+		if(ff[i] == 0)
+			prime[tot++]=ff[i]=i;
+		for(int j=0;j<tot && prime[j]<=ff[i] && i*prime[j]<=NN;j++)
+			ff[i*prime[j]]=prime[j];
+	}
+}
+
+LL mod_exp(LL a,LL b,LL c)
+{
+	LL ans=1;
+	while(b)
+	{
+		if(b & 1)
+			ans=ans*a%c;
+		a=a*a%c;
+		b/=2;
+	}
+	return ans;
+}
+
+void fun(){
+	MEM(p);
+	for(int t=1;t<=n;t++){
+		for(int i=0;i<tot && prime[i]*prime[i]<=f[t];i++){
+			int c=0;
+			while(f[t]%prime[i] == 0){
+				c++;
+				f[t]/=prime[i];
+			}
+			p[prime[i]]=max(p[prime[i]],c);
+		}
+		if(f[t] > 1){
+			p[f[t]]=max(1,p[f[t]]);
+		}
+	}
+	LL ans=1;
+	for(int i=1;i<=n;i++){
+		if(p[i]){
+			ans=ans*mod_exp(i,p[i],M)%M;
+		}
+	}
+	pf64(ans);
+}
+
+int main(){
+    Getprime();
+    int T;
+    sf(T);
+    while(T--){
+        sf(n);
+        fr(n) sf(f[i]);
+        fun();
+    }
+    return 0;
+}

@@ -1,0 +1,84 @@
+//hdu 4622 多次询问一个字符串的某个子串的所有不相同子串
+#define N 2010
+int F[N*2],ant,last,ch[N*2][26],step[N*2];
+void init()
+{
+    last=ant=1;
+    memset(F,0,sizeof(F));
+    memset(ch,0,sizeof(ch));
+    memset(step,0,sizeof(step));
+}
+
+void ins(int x)
+{
+    int t=++ant,pa=last;
+    step[t]=step[last]+1;last=t;
+    for(;pa&&!ch[pa][x];pa=F[pa])
+    	ch[pa][x]=t;
+    if(pa==0)
+    	F[t]=1;
+    else if(step[pa]+1==step[ch[pa][x]])
+    	F[t]=ch[pa][x];
+    else
+    {
+        int nq=++ant,q=ch[pa][x];
+        memcpy(ch[nq],ch[q],sizeof(ch[nq]));
+        step[nq]=step[pa]+1;F[nq]=F[q];F[q]=F[t]=nq;
+        for(;pa&&ch[pa][x]==q;pa=F[pa])
+        	ch[pa][x]=nq;
+    }
+}
+//以上为后缀自动机的部分
+
+char s[N];
+int ans[10100];
+
+vector<pair<int,int> > Q[N];
+
+void run(int p)
+{
+    int i,t,j,tt;
+    init();
+    sort(Q[p].begin(),Q[p].end());
+    for(i=0,t=p-1;i<(int)Q[p].size();i++)
+    {
+        if(i&&Q[p][i].first==t)
+        {
+            ans[Q[p][i].second]=tt;
+            continue;
+        }
+        while(t<Q[p][i].first)
+        {
+            ins(s[t]-'a');
+            t++;
+        }
+        for(tt=0,j=ant;j>0;j--)
+        	tt+=step[j]-step[F[j]];
+        ans[Q[p][i].second]=tt;
+    }
+}
+
+int main()
+{
+    int cas,n,i,a,b,m;
+    scanf("%d",&cas);
+    while(cas--)
+    {
+        scanf("%s",s);
+        m=(int)strlen(s);
+        for(i=1;i<=m;i++)
+        	Q[i].clear();
+        scanf("%d",&n);
+        for(i=1;i<=n;i++)
+        {
+            scanf("%d%d",&a,&b);
+            Q[a].push_back(make_pair(b,i));
+        }
+        for(i=1;i<=m;i++)
+        	if(Q[i].size())
+        		run(i);
+        for(i=1;i<=n;i++)
+        	printf("%d\n",ans[i]);
+    }
+	return 0;
+}

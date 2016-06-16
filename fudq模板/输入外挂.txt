@@ -1,0 +1,30 @@
+//非负整数
+int get_int()
+{
+	int ch,res=0;
+	while(!((ch = getchar())>='0' && ch<='9'))
+		if(ch == EOF)
+			return 1<<30;
+	res=ch-'0';
+	while((ch=getchar())>='0' && ch <='9')
+		res=res*10+(ch-'0');
+	return res;
+}
+
+//整数
+int get_int2()
+{
+    int res = 0, ch, flag = 0;
+    while (!((ch = getchar()) >= '0' && ch <= '9')) {
+        if (ch == '-')
+            flag = 1;
+        if (ch == EOF)
+            return -1;
+    }
+    res = ch - '0';
+    while ((ch = getchar()) >= '0' && ch <= '9')
+        res = res * 10 + (ch - '0');
+    if (flag == 1)
+        res = -res;
+    return res;
+}

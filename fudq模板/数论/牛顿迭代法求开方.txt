@@ -1,0 +1,8 @@
+//原理是二分
+double NT_sqrt(double n)
+{
+	double m = 1;
+	while(fabs(m-(m+n/m)/2)>1e-6)
+		m=(m+n/m)/2;
+	return m;
+}

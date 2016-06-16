@@ -1,0 +1,81 @@
+int n,w[15],b[15];
+
+int Extended_Euclid(int a,int b,int &x,int &y)    //扩展欧几里得算法
+{
+	int d;
+	if(b==0)
+	{
+		x=1;y=0;
+		return a;
+	}
+	d=Extended_Euclid(b,a%b,y,x);
+	y-=a/b*x;
+	return d;
+}
+
+int Chinese_Remainder(int a[],int w[],int len)    //中国剩余定理  a[]存放余数  w[]存放两两互质的数
+{
+	int i,d,x,y,m,s,ret;
+	ret=0;
+	s=1;
+	for (i=0;i<len;i++)
+		s*=w[i];
+	for (i=0;i<len;i++)
+	{
+		m=s/w[i];
+		d=Extended_Euclid(w[i],m,x,y);
+		ret=(ret+y*m*a[i])%s;
+	}
+	return (s+ret%s)%s;
+}
+
+
+void solve()
+{
+	int i;
+	while (scanf("%d",&n),n)
+	{
+		for (i=0;i<n;i++)
+			scanf("%d%d",&w[i],&b[i]);
+		printf("%d\n",Chinese_Remainder(b,w,n));
+	}
+}
+
+
+
+
+//b[]任意两个数不互质的情况，用线性同余式定理求解
+int num[15],rem[15];
+
+int Extend_gcd(int a,int b,int &x,int &y)    //扩展欧几里得算法
+{
+	int d;
+	if(b==0)
+	{
+		x=1;y=0;
+		return a;
+	}
+	d=Extend_gcd(b,a%b,y,x);
+	y-=a/b*x;
+	return d;
+}
+
+//返回0的时候如果有需要特判下，p记录所有除数的最小公倍数
+int Chinese_Remainder(int n,int num[],int remain[],int &p)
+{
+	int a,b,c,d,x,y,remain1,remain2;
+	a=num[0];remain1=remain[0];
+	for(int i=1;i<n;i++)
+	{
+		b=num[i];remain2=remain[i];c=remain2-remain1;
+		d=Extend_gcd(a,b,x,y);
+		if(c%d)
+			return -1;  	//不整除表示无解
+		x=((x*(c/d))%b+b)%b;
+		remain1=remain1+a*x;
+		a=(a*b)/d;
+		remain1=(remain1%a+a)%a;
+	}
+	p=a;
+	return remain1;
+}

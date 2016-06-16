@@ -1,0 +1,79 @@
+typedef struct BiTNode
+{
+	int data,temp;
+	struct BiTNode *lchild,*rchild;
+}BiTNode,*BiTree;
+
+int n,flag,f1[N],f2[N];
+
+void dfs(BiTree &root,int t)
+{
+	if(root == NULL)
+	{
+		root=new BiTNode;
+		root->data=f2[t];
+		root->temp=t;
+		root->lchild=NULL;
+		root->rchild=NULL;
+		return ;
+	}
+	if(t < root->temp)
+		dfs(root->lchild,t);
+	else
+		dfs(root->rchild,t);
+}
+
+void Create(BiTree &root)
+{
+	int tmp;
+	root=new BiTNode;
+	for(int i=0;i<n;i++)
+		if(f2[i] == f1[0])
+		{
+			tmp=i;
+			root->data=f1[0];
+			root->temp=i;
+			root->lchild=NULL;
+			root->rchild=NULL;
+			break;
+		}
+	for(int i=1;i<n;i++)
+		for(int j=0;j<n;j++)
+		{
+			if(f1[i] == f2[j])
+			{
+				if(j < tmp)
+					dfs(root->lchild,j);
+				else
+					dfs(root->rchild,j);
+				break;
+			}
+		}
+}
+
+void Output(BiTree root)
+{
+	if(root == NULL)
+		return ;
+	Output(root->lchild);
+	Output(root->rchild);
+	if(flag == 1)
+		printf(" ");
+	printf("%d",root->data);
+	flag=1;
+}
+
+
+void solve()
+{
+	scanf("%d",&n);
+	for(int i=0;i<n;i++)
+		scanf("%d",&f1[i]);
+	for(int i=0;i<n;i++)
+		scanf("%d",&f2[i]);
+	BiTree root;
+	Create(root);
+	flag=0;
+	Output(root);
+	printf("\n");
+}

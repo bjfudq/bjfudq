@@ -1,0 +1,25 @@
+struct point{double x,y;};
+double dist(point a,point b){return sqrt((a.x-b.x)*(a.x-b.x)+(a.y-b.y)*(a.y-b.y));}
+
+double cir_area(point a,double r1,point b,double r2)
+{
+	double d=dist(a,b);
+	if(r1+r2 <= d || r1==0 || r2==0)	//如果相离或者相切，结果为0
+		return 0;
+	else if(d <= fabs(r1-r2))		//如果包含，结果为面积小的圆
+	{
+		double rr=min(r1,r2);
+		return PI*rr*rr;
+	}
+	else
+	{
+		double ang1=acos((r1*r1+d*d-r2*r2)/(2*r1*d));	//圆1和圆心距形成的夹角
+		double ang2=acos((r2*r2+d*d-r1*r1)/(2*r2*d));	//圆2和圆心距形成的夹角
+		double shan1=r1*r1*ang1;	//圆1和公共弦形成的扇形
+		double shan2=r2*r2*ang2;	//圆2和公共弦形成的扇形
+		double are_tri1=r1*r1*sin(ang1)*cos(ang1);		//圆1和公共弦形成的三角形
+		double are_tri2=r2*r2*sin(ang2)*cos(ang2);		//圆2和公共弦形成的三角形
+		double ans=shan1+shan2-are_tri1-are_tri2;		//计算公共面积
+		return ans;
+	}
+}

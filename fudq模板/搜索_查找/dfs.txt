@@ -1,0 +1,32 @@
+//dfs打数组f的全排列，ans记录个数
+int f[12]={1,2,3,4,5};
+int ans,a[12],vis[12];
+
+void dfs(int tmp)
+{
+	if(tmp == 5)
+	{
+		ans++;
+		for(int i=0;i<5;i++)
+			printf("%d ",a[i]);
+		printf("\n");
+		return ;
+	}
+	for(int i=0;i<5;i++)
+	{
+		if(!vis[i])
+		{
+			vis[i]=1;
+			a[tmp]=f[i];
+			dfs(tmp+1);
+			vis[i]=0;
+		}
+	}
+}
+
+void solve()
+{
+	MEM(vis);ans=0;
+	dfs(0);
+	printf("%d\n",ans);
+}

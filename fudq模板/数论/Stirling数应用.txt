@@ -1,0 +1,40 @@
+Bell数
+又称贝尔数，递推公式为：
+B(0)=1,
+B(n+1)=Sum(0,n) C(n,k)B(k). n=1,2,...
+其中，Sum(0,n)表示对k从0到n求和，C(n,k) = n!/[k!(n-k)!]
+
+第一类Stirling数
+第一类Stirling数是有正负的，其绝对值是包含n个元素的集合分作k个环排列的方法数目。
+递推公式为：
+S(n,0)=0, S(1,1)=1.
+S(n+1,k)=S(n,k-1)+n*S(n,k).
+
+第二类Stirling数
+第二类Stirling数是把包含n个元素的集合划分为正好k个非空子集的方法的数目。
+递推公式为：
+S(n,n)=S(n,1)=1,
+S(n,k)=S(n-1,k-1)+k*S(n-1,k).
+
+Bell数和Stirling数的关系为：
+每个Bell数都是第二类Stirling数的和
+B(n)=Sum(1,n) S(n,k).
+
+
+//打印前50个贝尔数以及第二类Stirling数
+int bell[N],num[N][N];
+
+void init()
+{
+	num[0][0]=1;
+	bell[0]=bell[1]=1;
+	for(int i=1;i<=50;i++)
+	{
+		num[i][1]=1;
+		for(int j=1;j<=i;j++)
+			num[i][j]=(num[i-1][j-1]+j*num[i-1][j])%MOD;
+		bell[i]=0;
+		for(int k=1;k<=i;k++)
+			bell[i]=(bell[i]+num[i][k])%MOD;
+	}
+}

@@ -1,0 +1,28 @@
+struct point{double x,y,z;};
+struct line{point a,b;};
+double dmult(point u,point v){return u.x*v.x+u.y*v.y+u.z*v.z;}	//三维点积
+double vlen(point p){return sqrt(p.x*p.x+p.y*p.y+p.z*p.z);}		//向量大小
+
+point subt(point u,point v)		//矢量差U-V
+{
+	point ret;
+	ret.x=u.x-v.x;
+	ret.y=u.y-v.y;
+	ret.z=u.z-v.z;
+	return ret;
+}
+
+point xmult(point u,point v)	//三维叉积
+{
+	point ret;
+	ret.x=u.y*v.z-v.y*u.z;
+	ret.y=u.z*v.x-u.x*v.z;
+	ret.z=u.x*v.y-u.y*v.x;
+	return ret;
+}
+
+double linetoline(line u,line v)	//空间直线间距离
+{
+	point n=xmult(subt(u.a,u.b),subt(v.a,v.b));
+	return fabs(dmult(subt(u.a,v.a),n))/vlen(n);
+}

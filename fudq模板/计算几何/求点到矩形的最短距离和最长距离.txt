@@ -1,0 +1,78 @@
+double dismin,dismax;//记录点到矩形的最短距离和最长距离
+double min(double a,double b){return a<b?a:b;}
+double max(double a,double b){return a>b?a:b;}
+
+double dis(double x1,double y1,double x2,double y2)
+{
+	return sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+}
+
+void fun(double x,double y,double x1,double y1,double x2,double y2)
+{
+	//将对角线坐标统一成左上和右下
+	double temp;
+	if(x1 > x2)
+	{
+		temp=x1;
+		x1=x2;
+		x2=temp;
+	}
+	if(y2 > y1)
+	{
+		temp=y2;
+		y2=y1;
+		y1=temp;
+	}
+	//10种情况分别讨论
+	if(x<x1 && y>y1)
+	{
+		dismin=dis(x,y,x1,y1);
+		dismax=dis(x,y,x2,y2);
+		return ;
+	}
+	if((x<=x2 && x>=x1) && y>=y1)
+	{
+		dismin=y-y1;
+		dismax=max(dis(x,y,x1,y2),dis(x,y,x2,y2));
+		return ;
+	}
+	if(x>x2 && y>y1)
+	{
+		dismin=dis(x,y,x2,y1);
+		dismax=dis(x,y,x1,y2);
+		return ;
+	}
+	if(x>=x2 && (y<=y1 && y>=y2))
+	{
+		dismin=x-x2;
+		dismax=max(dis(x,y,x1,y1),dis(x,y,x1,y2));
+		return ;
+	}
+	if(x>x2 && y<y2)
+	{
+		dismin=dis(x,y,x2,y2);
+		dismax=dis(x,y,x1,y1);
+		return ;
+	}
+	if((x<=x2 && x>=x1) && y<=y2)
+	{
+		dismin=y2-y;
+		dismax=max(dis(x,y,x1,y1),dis(x,y,x2,y1));
+		return ;
+	}
+	if(x<x1 && y<y2)
+	{
+		dismin=dis(x,y,x1,y2);
+		dismax=dis(x,y,x2,y1);
+		return ;
+	}
+	if(x<=x1 && (y<=y1 && y>=y2))
+	{
+		dismin=x1-x;
+		dismax=max(dis(x,y,x2,y1),dis(x,y,x2,y2));
+		return ;
+	}
+	//点在矩形内
+	dismin=min(min(x-x1,x2-x),min(y1-y,y-y2));
+	dismax=max(max(dis(x,y,x1,y1),dis(x,y,x2,y1)),max(dis(x,y,x1,y2),dis(x,y,x2,y2)));
+}

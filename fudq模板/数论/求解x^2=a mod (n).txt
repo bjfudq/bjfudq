@@ -1,0 +1,41 @@
+//求解x^2 ≡ a mod (n), n为素数.
+//有解时.返回较小解x, 另外一解为 n-x. 
+LL Mod_exp(LL a,LL b,LL c)
+{
+    LL ans=1;
+    while(b)
+    {
+        if(b & 1)
+            ans=ans*a%c;
+        a=(a%c)*(a%c)%c;
+        b/=2;
+    }
+    return ans;
+}
+
+LL ModSqrt(LL a,LL n)
+{
+	int b,k,i,x;
+	if(n == 2)
+		return a%n;
+	if(Mod_exp(a,(n-1)/2,n) == 1)
+	{
+		if(n%4==3)
+			x=Mod_exp(a,(n+1)/4,n);
+		else
+		{
+			for(b=1;Mod_exp(b,(n-1)/2,n)==1;b++);
+			i=(n-1)/2;k=0;
+			do{
+				i/=2;k/=2;
+				if((Mod_exp(a,i,n)*(LL)Mod_exp(b,k,n)+1)%n == 0)
+					k+=(n-1)/2;
+			}while(i%2 == 0);
+			x=(Mod_exp(a,(i+1)/2,n)*(LL)Mod_exp(b,k/2,n))%n;
+		}
+		if(x*2>n)
+			x=n-x;
+		return x;
+	}
+	return -1;
+}

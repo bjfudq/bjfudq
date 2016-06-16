@@ -1,0 +1,44 @@
+求解模方程a^x=b(mod p)。p为素数，无解返回-1
+
+//快速幂求a^b
+LL Mod_exp(LL a,LL b,LL c)
+{
+    LL ans=1;
+    while(b)
+    {
+        if(b & 1)
+            ans=ans*a%c;
+        a=(a%c)*(a%c)%c;
+        b/=2;
+    }
+    return ans;
+}
+
+//费马小定理a^(p-1)=1(mod p),p为素数。a^0=1,所以循环节小于等于p，即如果存在解，则最小解x<=p
+LL Log_mod (LL a,LL b,LL p)
+{
+    if(a%p == 0) return -1;
+    LL m,v,e=1;
+    m=(LL)ceil(sqrt(p+0.5));     //x=i*m+j
+    //v=inv(pow_mod(a,m,n),n);  //a^m*v=1(mod n)
+    v=Mod_exp(a,p-m-1,p);
+    map<LL,LL>x;
+    x[1]=m;
+    for(LL i=1;i<m;i++)  //建哈希表，保存x^0,x^1,...,x^m-1
+    {
+        e=(e*a)%p;
+        if(!x[e])
+        	x[e]=i;
+    }
+    for(LL i=0;i<m;i++)//每次增加m次方，遍历所有1<=x<=n
+    {
+        if(x[b])
+        {
+            LL num=x[b];
+            x.clear();//需要清空，不然会爆内存
+            return i*m+(num==m?0:num);
+        }
+        b=(b*v)%p;   //b=b/(a^m)
+    }
+    return -1;
+}

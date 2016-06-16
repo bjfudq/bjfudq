@@ -1,0 +1,149 @@
+对于平面上两点(x1,y1),(x2,y2)的曼哈顿距离为|x1-x2|+|y1-y2|
+去掉绝对值，将同一点的坐标整理一边可以得到下面四种情况:
+1.x1-x2+y1-y2->(x1+y1)-(x2+y2)
+2.x2-x1+y1-y2->(-x1+y1)-(-x2+y2)
+3.x1-x2+y2-y1->(x1-y1)-(x2-y2)
+4.x2-x1+y2-y1->(-x1-y1)-(-x2-y2)
+可以发现左半部分和右半部分的符号完全相同，我们假设0代表’+’,1代表’-‘,则有00 01 10 11.
+我们可以把所有的点在k维空间下的2^k种状态处理出。最大距离肯定在2^k种状态下某两个点的状态之差取最大值。
+
+静态(poj 2926)：
+
+struct Point{
+	double x[6];
+}point[N];
+#define N 100010
+int n,tot,dim=5;
+double minn[35],maxn[35];
+
+void solve()
+{
+	tot=1<<dim;
+	for(int i=0;i<tot;i++)
+	{
+		minn[i]=INF;
+		maxn[i]=-INF;
+	}
+
+	for(int k=0;k<n;k++)
+	{
+		for(int i=0;i<tot;i++)
+		{
+			double res=0;
+			for(int j=0;j<dim;j++)
+			{
+				if(i & (1<<j))
+					res+=point[k].x[j];
+				else
+					res-=point[k].x[j];
+			}
+			maxn[i]=Max(maxn[i],res);
+			minn[i]=Min(minn[i],res);
+		}
+	}
+	double ans=-1;
+	for(int i=0;i<tot;i++)
+		ans=Max(ans,maxn[i]-minn[i]);
+	printf("%.2lf\n",ans);
+}
+
+int main()
+{
+    while(scanf("%d",&n)!=EOF)
+    {
+    	for(int i=0;i<n;i++)
+    		for(int j=0;j<dim;j++)
+    			scanf("%lf",&point[i].x[j]);
+    	solve();
+    }
+    return 0;
+}
+
+
+
+动态(hdu 4666)：
+用multiset动态维护2^k种状态对应每种状态的所有值，再用结构体数组记录每个点的2^k种状态。
+#define N 60010
+struct Point{
+	int x[6],p[40];
+}point[N];
+
+int n,dim,tot;
+multiset<int> s[40];
+
+void Update(int tmp)
+{
+	for(int i=0;i<tot;i++)
+	{
+		int ans=0;
+		for(int j=0;j<dim;j++)
+		{
+			if(i & (1<<j))
+				ans+=point[tmp].x[j];
+			else
+				ans-=point[tmp].x[j];
+		}
+		point[tmp].p[i]=ans;
+	}
+}
+
+void Insert(int tmp)
+{
+	Update(tmp);
+	for(int i=0;i<tot;i++)
+		s[i].insert(point[tmp].p[i]);
+}
+
+void Delete(int tmp)
+{
+	for(int i=0;i<tot;i++)
+		s[i].erase(s[i].find(point[tmp].p[i]));
+}
+
+void Query()
+{
+	if(s[0].size() < 2)
+	{
+		printf("0\n");
+		return ;
+	}
+	int ans=-1;
+	for(int i=0;i<tot;i++)
+	{
+		int t1=*(s[i].begin());
+		int t2=*(s[i].rbegin());
+		ans=max(ans,t2-t1);
+	}
+	printf("%d\n",ans);
+}
+
+void solve()
+{
+	tot=1<<dim;
+	for(int i=0;i<tot;i++)
+		s[i].clear();
+	int a,b;
+	for(int i=1;i<=n;i++)
+	{
+		scanf("%d",&a);
+		if(a == 0)
+		{
+			for(int j=0;j<dim;j++)
+				scanf("%d",&point[i].x[j]);
+			Insert(i);
+		}
+		else
+		{
+			scanf("%d",&b);
+			Delete(b);
+		}
+		Query();
+	}
+}
+
+int main()
+{
+    while(scanf("%d%d",&n,&dim)!=EOF)
+    	solve();
+    return 0;
+}

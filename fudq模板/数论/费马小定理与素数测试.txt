@@ -1,0 +1,27 @@
+//判定一个数是否是素数的过程：
+int power(int a,int e,int m)
+{
+	if(e == 0)
+		return 1;
+	if(e == 1)
+		return a%m;
+	int t=power(a,e/2,m);
+	if(e%2 == 1)
+		return (t*t*a)%m;
+	return (t*t)%m;
+}
+
+bool isprime(int x)
+{
+	const int a[4]={2,3,5,7};
+	for(int i=0;i<4;i++)
+		if(power(a[i],x-1,x) != 1)
+			return false;
+	return true;
+}
+
+注意这是一个概率算法。
+其判否的正确性可以保证：即函数返回false，则x一定不是素数；
+但是判是的正确性却不是100%：若函数返回true，则x只是很可能是素数。
+但是有一个结论：在int范围内，a只需要枚举2、3、5、7就一定能保证完全的正确性。
+

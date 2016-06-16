@@ -1,0 +1,85 @@
+//N->±ßÊý£¬M->µãÊý
+const int N=100010;
+const int M=10010;
+struct edge {
+    int e,next,id;
+    int sign;
+}ed[N];
+int head[M],num;
+int dfn[M],low[M],brg[N];
+int brgnum,top,dp;
+int n,m;
+void add(int s,int e,int id)
+{
+    ed[num].e=e;
+    ed[num].id=id;
+    ed[num].next=head[s];
+    ed[num].sign=0;
+    head[s]=num++;
+}
+
+void init()
+{
+    memset(head,-1,sizeof(head));
+    num=0;
+    brgnum=0;
+    MEM(dfn);
+    MEM(low);
+    MEM(brg);
+    top=dp=0;
+}
+
+void tarjan(int now,int fa)
+{
+    dfn[now]=low[now]=++dp;
+    for(int i=head[now];~i;i=ed[i].next)
+    {
+        int e=ed[i].e;
+        if(ed[i].sign) continue;
+        ed[i].sign=ed[i^1].sign=1;
+        if(!dfn[e])
+        {
+            tarjan(e,now);
+            low[now]=min(low[now],low[e]);
+            if(dfn[now] < low[e])
+                brg[brgnum++]=ed[i].id;
+        }
+        else
+        	low[now]=min(low[now],dfn[e]);
+    }
+}
+
+void solve()
+{
+	for(int i=1;i<=n;i++)
+	{
+		top=dp=0;
+		if(!dfn[i])
+			tarjan(i,-1);
+	}
+	sort(brg,brg+brgnum);
+	pf(brgnum);
+	for(int i=0;i<brgnum;i++)
+	{
+		if(i) pfk;
+		printf("%d",brg[i]);
+	}
+	pfn;
+}
+
+int main()
+{
+    while(sf2(n,m)!=EOF)
+    {
+    	init();
+    	for(int i=1;i<=m;i++)
+    	{
+    		int a,b;
+    		sf2(a,b);
+    		add(a,b,i);
+    		add(b,a,i);
+    	}
+    	solve();
+    }
+    return 0;
+}

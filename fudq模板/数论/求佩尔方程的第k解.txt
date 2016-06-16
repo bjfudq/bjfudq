@@ -1,0 +1,57 @@
+定义：形如x^2-n*y^2=1的方程
+方程性质：
+如果n是完全平方数，则方程无解；否则方程有无穷多组正整数解
+每组解(xi,yi)存在这样的递推关系式：
+xi = xi-1 * x1 + n * yi-1 * y1;
+yi = xi-1 * y1 + yi-1 * x1.
+
+要求方程第k个解，可以先求出最小正整数解(p,q)，然后利用上面的递推式，构造2*2的矩阵tmp(构造如下)，用矩阵快速幂解决。
+矩阵tmp构造如下：
+tmp.v[0][0]=p;tmp.v[0][1]=q;tmp.v[1][0]=n*q;tmp.v[1][1]=p;
+第k个解=[p,q]*(tmp^(k-1));
+
+求最小正整数解(p,q)模板：
+struct Pell{
+    LL p,q;
+};
+
+struct Node{
+    LL g,h;
+};
+
+Pell Getminpell(LL n)
+{
+    Pell s[4];
+    Node w[4];
+    int a[4];
+    s[0].p=0; s[0].q=1;
+    s[1].p=1; s[1].q=0;
+    a[0]=(LL)floor(sqrt(n*1.0));
+    a[2]=a[0];
+    w[1].g=0;w[1].h=1;
+    while(1)
+    {
+        w[2].g = -w[1].g+a[2]*w[1].h;
+        w[2].h = (n-w[2].g*w[2].g)/w[1].h;
+        a[3] = (LL)floor( (double)(w[2].g+a[0])/w[2].h );
+        s[2].p = a[2]*s[1].p+s[0].p;
+        s[2].q = a[2]*s[1].q+s[0].q;
+        if( (s[2].p*s[2].p-n*s[2].q*s[2].q) == 1 && s[2].p>0 && s[2].q>0 )
+                return s[2];
+        w[0]=w[1];w[1]=w[2];
+        a[2]=a[3];
+        s[0]=s[1];s[1]=s[2];
+    }
+}
+
+void solve(LL n)
+{
+	LL t=(LL)sqrt(n*1.0);
+	if(t*t == n)
+	{
+		printf("No answer.\n");
+		return ;
+	}
+	Pell ans=Getminpell(n);
+	printf("%I64d %I64d\n",ans.p,ans.q);
+}

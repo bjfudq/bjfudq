@@ -1,0 +1,81 @@
+点少选择Prim算法O(n^2)，边少选择kruskal算法O(eloge)
+
+//Prim算法
+#define N 1020
+#define M 0x3fffffff
+int n,f[N][N];
+int lowcost[N];
+bool vis[N];
+
+int MST_Prim()
+{
+	//设0为起点
+	int i,j,sum,minnum,sign;
+	sum=0;
+	for(i=0;i<n;i++)
+		lowcost[i]=f[0][i];
+	memset(vis,false,sizeof(vis));
+	vis[0]=true;
+	for(i=1;i<n;i++)
+	{
+		minnum=M;
+		for(j=0;j<n;j++)
+			if(!vis[j] && lowcost[j]<minnum)
+			{
+				sign=j;
+				minnum=lowcost[j];
+			}
+		if(minnum==M)
+			break;
+		sum+=minnum;
+		vis[sign]=true;
+		for(j=0;j<n;j++)
+			if(!vis[j] && f[sign][j]<lowcost[j])
+				lowcost[j]=f[sign][j];
+	}
+	return sum;
+}
+
+
+
+//kruskal算法
+#define N 10020
+#define M 0x3fffffff
+struct Node{
+	int s,e,v;
+}node[N];
+int f[N];
+
+bool cmp(Node a,Node b)
+{
+	if(a.v < b.v)
+		return true;
+	return false;
+}
+
+int Find(int a)
+{
+	if(a != f[a])
+		f[a]=Find(f[a]);
+	return f[a];
+}
+
+//n个点，m条边
+int kruskal(int n,int m)
+{
+	int fx,fy,sum=0;
+	for(int i=0;i<=n;i++)
+		f[i]=i;
+	sort(node,node+m,cmp);
+	for(int i=0;i<m;i++)
+	{
+		fx=Find(node[i].s);
+		fy=Find(node[i].e);
+		if(fx != fy)
+		{
+			sum+=node[i].v;
+			f[fx]=f[fy];
+		}
+	}
+	return sum;
+}

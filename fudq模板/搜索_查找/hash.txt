@@ -1,0 +1,126 @@
+//hdu1043 八数码经典问题
+//解法：bfs打表+哈希，从最后状态(13245678x)搜，状态用哈希记录，并记录路径（ps：八数码有很多经典解法，比如*A,迭代加深,双向bfs，但都用到哈希）
+
+
+struct Node{
+	int x,y,ha;		//x和y记录‘x’的位置，ha记录哈希值
+	char m[3][3];
+};
+int dir[4][2]={
+		{1,0},{-1,0},{0,1},{0,-1}
+};
+int fac[12]={1,1,2,6,24,120,720,5040,40320,362880};
+char c[5]="udlr";
+char path[N];	//path记录路径
+Node t,tmp;
+int vis[N],pre[N];	//pre记录前一中状态的哈希值
+
+void fun(Node &t,char s[])		//将s转成t中3*3的格子
+{
+	int len,i,j;
+	len=(int)strlen(s);
+	i=0;j=0;
+	for(int k=0;k<len;k++)
+	{
+		if(s[k] < '9' && s[k] >= '0')
+			t.m[i][j++]=s[k];
+		else if(s[k] == 'x')
+		{
+			t.x=i;
+			t.y=j;
+			t.m[i][j++]='x';
+		}
+		if(j == 3)
+		{
+			i++;
+			j=0;
+		}
+	}
+}
+
+int Hash(Node p)	//计算p中格子的哈希值
+{
+	char s[12];
+	int i,j,n,c,k=0;
+	for(i=0;i<3;i++)
+		for(j=0;j<3;j++)
+			s[k++]=p.m[i][j];
+	s[k]='\0';
+
+	for(i=0,n=0;i<8;i++)
+	{
+		c=0;
+		for(j=i+1;j<9;j++)
+			if(s[j] < s[i])
+				c++;
+		n+=c*fac[8-i];
+	}
+	return n;
+
+}
+
+void bfs()		//逆序搜索
+{
+	int hash1,hash2;
+	char s[12]="12345678x";
+	fun(t,s);
+	MEM(vis);
+	memset(path,-1,sizeof(path));
+	hash1=Hash(t);
+	vis[hash1]=1;
+	t.ha=hash1;
+	queue<Node> Q;
+	Q.push(t);
+	while(!Q.empty())
+	{
+		t=Q.front();
+		Q.pop();
+		hash1=t.ha;
+		for(int i=0;i<4;i++)
+		{
+			tmp=t;
+			tmp.x=t.x+dir[i][0];
+			tmp.y=t.y+dir[i][1];
+			if(tmp.x < 3 && tmp.x >= 0 && tmp.y < 3 && tmp.y >= 0)
+			{
+				char tt=tmp.m[t.x][t.y];
+				tmp.m[t.x][t.y]=tmp.m[tmp.x][tmp.y];
+				tmp.m[tmp.x][tmp.y]=tt;
+				hash2=Hash(tmp);
+				if(!vis[hash2])
+				{
+					vis[hash2]=1;
+					pre[hash2]=hash1;
+					path[hash2]=c[i];
+					tmp.ha=hash2;
+					Q.push(tmp);
+				}
+			}
+		}
+	}
+
+}
+
+int main()
+{
+	int h;
+	char str[51];
+	bfs();
+	while(gets(str))
+	{
+		fun(tmp,str);
+		h=Hash(tmp);
+		if(!vis[h])
+		{
+			printf("unsolvable\n");
+			continue;
+		}
+		while(path[h] != -1)
+		{
+			printf("%c",path[h]);
+			h=pre[h];
+		}
+		printf("\n");
+	}
+	return 0;
+}

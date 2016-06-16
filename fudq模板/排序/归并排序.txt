@@ -1,0 +1,31 @@
+//数组a前n个元素排序:Mergesort(0,n,a)
+void Mergesort(int lef,int rig,int a[])
+{
+	int c[12];
+	int mid,i,j,tmp,cnt=0;
+	if(rig > lef+1)
+	{
+		mid=(lef+rig)/2;
+		Mergesort(lef,mid,a);
+		Mergesort(mid,rig,a);
+		tmp=lef;
+		for(i=lef,j=mid;i<mid && j<rig;)
+		{
+			if(a[i] < a[j])	//'>'升序，'<'降序
+			{
+				c[tmp++]=a[j++];
+				cnt+=mid-i;
+			}
+			else
+				c[tmp++]=a[i++];
+		}
+		if(j < rig)
+			for(;j<rig;j++)
+				c[tmp++]=a[j];
+		else
+			for(;i<mid;i++)
+				c[tmp++]=a[i];
+		for(i=lef;i<rig;i++)
+			a[i]=c[i];
+	}
+}

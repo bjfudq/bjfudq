@@ -1,0 +1,34 @@
+给N个权值Wi构成的有N个叶子结点的哈夫曼树，相应的叶子结点的路径长度为Li，求哈夫曼树的WPL
+
+priority_queue <LL, vector<LL>, greater<LL> > Q;
+ 
+int main()
+{
+    int num;
+    LL n,m,a;
+    while(sf(num)!=EOF)
+    {
+        if(num == 1)	//特判
+        {
+            sf64(a);
+            pf64(a);
+            continue ;
+        }
+        while(!Q.empty())
+            Q.pop();
+        fr(num){
+            sf64(a);
+            Q.push(a);
+        }
+	LL sum=0;
+        while(Q.size() > 1)
+        {
+            n=Q.top();Q.pop();
+            m=Q.top();Q.pop();
+            sum=sum+n+m;
+            Q.push(n+m);
+        }
+        pf64(sum);
+    }
+    return 0;
+}

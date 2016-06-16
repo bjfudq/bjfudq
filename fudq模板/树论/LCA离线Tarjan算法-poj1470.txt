@@ -1,0 +1,109 @@
+/* poj 1470
+ * 给 n 个点的树，q 次查询，每次询问两个点的 LCA，问最后每个点成为 LCA 的次数
+ * 注意：这里存单边统计方便，不会有重复统计
+ */
+struct Edge{
+	int v,next;
+}edge[N*2];
+int n,m;
+int e,head[N];
+int vis[N],fa[N],r[N],gen[N];
+vector<int>que[N];
+
+void init() {
+	e=0;
+	for(int i=1;i<=n;i++){
+		head[i]=-1;
+		vis[i]=0;
+		fa[i]=i;
+		que[i].clear();
+		r[i]=0;
+		gen[i]=0;
+	}
+}
+
+void add(int u,int v){
+	edge[e].v=v;
+	edge[e].next=head[u];
+	head[u]=e++;
+}
+
+int Find(int x) {
+	return x==fa[x]?x:fa[x]=Find(fa[x]);
+}
+
+void Merge(int x,int y) {
+	int fx=Find(x);
+	int fy=Find(y);
+	if(fx != fy){
+		fa[fy]=fx;
+	}
+}
+
+void Tarjan(int u) {
+	for(int i=head[u];i!=-1;i=edge[i].next){
+		int t=edge[i].v;
+		if(vis[t]) continue;
+		Tarjan(t);
+		Merge(u,t);
+	}
+	vis[u]=1;		//存的是单边，这句如果放前面，会重复统计
+	int tot=(int)que[u].size();
+	for(int i=0;i<tot;i++){
+		int t=que[u][i];
+		if(!vis[t]) continue;
+		r[Find(t)]++;
+	}
+}
+
+int get_int()
+{
+	int ch,res=0;
+	while(!((ch = getchar())>='0' && ch<='9'))
+		if(ch == EOF)
+			return 1<<30;
+	res=ch-'0';
+	while((ch=getchar())>='0' && ch <='9')
+		res=res*10+(ch-'0');
+	return res;
+}
+
+void solve(){
+	int a,b,t;
+	init();
+	fr(n) {
+		a=get_int();
+		t=get_int();
+		while(t--) {
+			scanf("%d",&b);
+			gen[b]=1;
+			add(a,b);		//存单边
+		}
+	}
+	sf(m);
+	fr(m){
+		a=get_int();
+		b=get_int();
+		que[a].push_back(b);	//两个点相关的查询都记录
+		que[b].push_back(a);
+	}
+	for(int i=1;i<=n;i++){		//确定根结点
+		if(!gen[i]){
+			Tarjan(i);
+			break;
+		}
+	}
+	for(int i=1;i<=n;i++){
+		if(r[i]){
+			printf("%d:%d\n",i,r[i]);
+		}
+	}
+}
+
+int main()
+{
+    while(sf(n)!=EOF){
+    	solve();
+    }
+    return 0;
+}

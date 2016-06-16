@@ -1,0 +1,39 @@
+求lcm(1,2,3,...,n)
+
+1. 先把所有小于n的素数乘在一起，得到ans。（这一步也可以先打表再二分）
+2. 考虑素数a的k次方的数，找到小于n的最大a的k次方数，ans乘上k-1个a。
+例如n=9,a=2,2的k次方数最大为8=2^3，k=3，需要在ans上乘上2个2.
+
+int n;
+int tot,prime[N+10],f[N+10];
+void Getprime()
+{
+    memset(f,0,sizeof(f));
+    tot=0;
+    for(int i=2;i<=N;i++)
+    {
+        if(f[i] == 0)
+            prime[tot++]=f[i]=i;
+        for(int j=0;j<tot && prime[j]<=f[i] && i*prime[j]<=N;j++)
+            f[i*prime[j]]=prime[j];
+    }
+}
+
+void fun(){
+    LL ans=1;
+    for(int i=0;i<tot && prime[i] <= n;i++)
+        ans=ans*prime[i]%MOD;
+    for(int i=0;i<tot && prime[i]*prime[i]<=n;i++){
+        LL y=prime[i]*prime[i];
+        while(y <= n) {
+            ans=ans*prime[i]%MOD;
+            y*=prime[i];
+        }
+    }
+    pf64(ans);
+}
+
+void solve(){
+	sf(n);
+	fun();
+}

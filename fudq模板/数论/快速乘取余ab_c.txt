@@ -1,0 +1,20 @@
+//a*b%c
+LL mod_mul(LL a,LL b,LL c)
+{
+	LL res,temp;
+	res=0,temp=a%c;
+	while(b)
+	{
+		if(b & 1)
+		{
+			res+=temp;
+			if (res>=c)
+				res-=c;
+		}
+		temp<<=1;
+		if(temp >= c)
+			temp-=c;
+		b>>=1;
+	}
+	return res;
+}

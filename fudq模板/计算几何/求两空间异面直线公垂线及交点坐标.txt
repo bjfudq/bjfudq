@@ -1,0 +1,58 @@
+//²Î¿¼À´×Ôhttp://blog.sina.com.cn/s/blog_648868460100h1sf.html
+
+struct Point{
+    double x,y,z;
+};
+
+int tt;
+Point aa,bb,cc,dd;
+Point diana,dianb;
+
+double fun(double a,double b,double c,double d){
+    return(a*d-b*c);
+}
+
+Point jiaodian(Point A,Point B,Point C,Point D)
+{
+    double xa,ya,za,xb,yb,zb,xc,yc,zc,xd,yd,zd,e,f,g,h,i,j,k,l,m,n,o,p,q,kk;
+    Point ss;
+    xa=A.x;ya=A.y;za=A.z;
+    xb=B.x;yb=B.y;zb=B.z;
+    xc=C.x;yc=C.y;zc=C.z;
+    xd=D.x;yd=D.y;zd=D.z;
+    e=fun(yb-ya,zb-za,yd-yc,zd-zc);
+    f=fun(zb-za,xb-xa,zd-zc,xd-xc);
+    g=fun(xb-xa,yb-ya,xd-xc,yd-yc);
+    h=xb-xa;i=yb-ya;j=zb-za;
+    k=xd-xc;l=yd-yc;m=zd-zc;
+    n=h*i*l-i*i*k-j*j*k+h*j*m;
+    o=h*h*l-h*i*k-i*j*m+j*j*l;
+    p=h*j*k-h*h*m-i*i*m+i*j*l;
+    q=-xa*n+ya*o-za*p;
+    kk=(o*yc-n*xc-p*zc-q)/(n*k-o*l+p*m);
+    ss.x=k*kk+xc;
+    ss.y=l*kk+yc;
+    ss.z=m*kk+zc;
+    return(ss);
+}
+
+void Print(Point pp){
+    printf("%.6lf %.6lf %.6lf",pp.x,pp.y,pp.z);
+}
+
+double dist(Point p,Point q){
+    return(sqrt(((p.x-q.x)*(p.x-q.x))+((p.y-q.y)*(p.y-q.y))+((p.z-q.z)*(p.z-q.z))));
+}
+
+void solve()
+{
+	scanf("%lf%lf%lf%lf%lf%lf",&aa.x,&aa.y,&aa.z,&bb.x,&bb.y,&bb.z);
+	scanf("%lf%lf%lf%lf%lf%lf",&cc.x,&cc.y,&cc.z,&dd.x,&dd.y,&dd.z);
+	diana=jiaodian(cc,dd,aa,bb);
+	dianb=jiaodian(aa,bb,cc,dd);
+	printf("%.6lf\n",dist(diana,dianb));
+	Print(diana);
+	printf(" ");
+	Print(dianb);
+	printf("\n");
+}

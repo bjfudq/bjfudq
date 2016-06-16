@@ -1,0 +1,64 @@
+#include<iostream>
+using namespace std;
+const int maxnum = 110;
+const int maxint = 999999;
+int dist[maxnum];
+int c[maxnum][maxnum];
+int n, line;
+
+void Dijkstra(int v)
+{
+    int i,j,tmp,u;
+    bool s[maxnum];
+    for(i=1; i<=n; ++i)
+    {
+        dist[i] = c[v][i];
+        s[i] = 0;
+    }
+    dist[v] = 0;
+    s[v] = 1;
+    for(i=1; i<=n; ++i)
+    {
+        tmp = maxint;
+        u = v;
+        for(j=1; j<=n; ++j)
+            if((!s[j]) && dist[j]<tmp)
+            {
+                u = j;
+                tmp = dist[j];
+            }
+	if(tmp==maxint)
+	    return ;
+        s[u] = 1;
+        for(j=1; j<=n; ++j)
+            if((!s[j]) && dist[u] + c[u][j] < dist[j])
+				dist[j]=dist[u] + c[u][j];
+    }
+}
+
+int main()
+{
+    int p, q, len,i,j;
+    while(scanf("%d%d",&n,&line))
+    {
+        if(n==0 && line==0)
+            break;
+        for(i=1; i<=n; ++i)
+            for(j=1; j<=n; ++j)
+                c[i][j] = maxint;
+        while(line--) 
+        {
+            scanf("%d%d%d",&p,&q,&len);
+            if(len < c[p][q])
+            {
+                c[p][q] = len;
+                c[q][p] = len;
+            }
+        }
+        for(i=1; i<=n; ++i)
+            dist[i] = maxint;
+        Dijkstra(1);
+        printf("%d\n",dist[n]);
+    }
+    return 0;
+}

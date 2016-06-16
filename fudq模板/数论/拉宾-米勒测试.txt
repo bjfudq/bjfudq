@@ -1,0 +1,36 @@
+#define LL __int64
+//直接调用miller_rabin判断n是否是素数，也可以增加s的值以减少误判率，不过一般赛题情况下s=50已经足够
+int witness(int a, int n)
+{
+	LL x,d=1,i=(LL)(ceil(log(n-1.0) / log(2.0))-1);
+	for(;i>=0;i--)
+	{
+		x=d;
+		d=(d*d)%n;
+		if(d==1 && x!=1 && x != n-1)
+			return 1;
+		if (((n-1) & (1<<i)) > 0)
+			d=(d*a)%n;
+	}
+	return (d==1?0:1);
+}
+
+//拉宾-米勒测试，是素数返回1，否则返回0
+int rabin_miller(int n)
+{
+	if (n==2)
+		return 1;
+	if ((n%2)==0)
+		return 0;
+	int j,s=50;
+	LL a;
+	for(j=0;j<s;j++)
+	{
+//rand()随机产生[0, RAND_MAX)内的整数RAND_MAX=32768
+//直接%n产生不了[RAND_MAX, n)的数,使用LL防止乘法溢出
+		a=(LL)rand()*(n-2) / RAND_MAX + 1;
+		if(witness(a,n))
+			return 0;
+	}
+	return 1;
+}

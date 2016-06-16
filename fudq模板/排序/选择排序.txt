@@ -1,0 +1,13 @@
+//数组a前n个元素排序:choosesort(n,a)
+void choosesort(int n,int a[])
+{
+   int i,j,k;
+   for(i=0;i<n;i++)
+   {
+	   k=i;
+	   for(j=i;j<n;j++)
+		   if(a[j] > a[k])	//'<'升序，'>'降序
+			   k=j;
+	   swap(a[i],a[k]);
+   }
+}

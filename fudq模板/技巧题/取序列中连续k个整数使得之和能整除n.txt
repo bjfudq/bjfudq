@@ -1,0 +1,40 @@
+有n个数组成的序列(3<=n<=20000)，取其中连续的h个数，使得这h个数的和对n取余为0，要求h尽量小，坐标尽量小。输出h个数在原序列中的下标。
+
+2w的数据，暴力效率为O(n^2)，显然会超时。
+正解：t记录前i项数的和对n取余的余数，s[t]记录余数为t时i的下标。当遍历的时候，如果当前位置下标为i，前i项数对n取余的余数为p，p在之前已经出现过了，则说明这两项之间的数之和一定能整数n，长度为i-s[p]。
+
+
+int r[N];
+void Stones()
+{
+	int n,sign,p=0,len=INF;
+	memset(r,-1,sizeof(r));
+	r[0]=0;
+	scanf("%d",&n);
+	for(int i=1;i<=n;i++)
+	{
+		scanf("%d",&a[i]);
+		p=(p+a[i])%n;
+		if(r[p] != -1)
+		{
+			if(i-r[p] < len)
+			{
+				len=i-r[p];
+				sign=r[p]+1;
+			}
+		}
+		r[p]=i;
+	}
+	if(len == INF)
+		printf("No\n");
+	else
+	{
+		for(int i=sign;i<sign+len;i++)
+		{
+			if(i!=sign)
+				printf(" ");
+			printf("%d",i);
+		}
+		printf("\n");
+	}
+}

@@ -1,0 +1,17 @@
+//数组a前n个元素排序:quicksort(0,n,a)
+void quicksort(int lef,int rig,int a[])
+{
+	if(rig < lef+2)
+		return ;
+	int e=rig,p=lef;
+	while(lef < rig)
+	{
+		while(++lef < e && a[lef] <= a[p]);	//'<='升序，改为>=降序
+		while(--rig > p && a[rig] >= a[p]);	//'>='升序，改为<=降序(与上面一起改)
+		if(lef < rig)
+			swap(a[lef],a[rig]);
+	}
+	swap(a[rig],a[p]);
+	quicksort(p,rig,a);
+	quicksort(lef,e,a);
+}

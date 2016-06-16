@@ -1,0 +1,47 @@
+int n,f[N],r[N],ans[N];
+
+int lowBit(int x)
+{
+    return x&-x;
+}
+
+int Sum(int x)
+{
+    int sum=0;
+    while(x > 0)
+    {
+        sum+=ans[x];
+        x-=lowBit(x);
+    }
+    return sum;
+}
+
+void Update(int x,int y)
+{
+    while(x<=n)
+    {
+        ans[x]+=y;
+        x+=lowBit(x);
+    }
+}
+void solve()
+{
+	fr(n) sf(f[i]);
+	MEM(ans);
+	int res=n*(n-1)/2;
+	for(int i=0;i<n;i++)
+	{
+		r[i]=Sum(f[i]);		//r[i]表示以f[i]结尾的正序对数
+		Update(f[i],1);
+		pf(r[i]);
+		res-=r[i];
+	}
+	pf(res);	//1到n的逆序数对
+}
+
+int main()
+{
+    while(sf(n)!=EOF)
+    	solve();
+    return 0;
+}

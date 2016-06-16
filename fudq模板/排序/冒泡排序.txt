@@ -1,0 +1,8 @@
+//数组a前n个元素排序:bubblesort(n,a)
+void bubblesort(int n,int a[])
+{
+	for(int i=0;i<n-1;i++)
+		for(int j=0;j<n-i-1;j++)
+			if(a[j] < a[j+1]) ///'>'升序，'<'降序
+				swap(a[j],a[j+1]);
+}

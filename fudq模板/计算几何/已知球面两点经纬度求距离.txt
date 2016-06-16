@@ -1,0 +1,4 @@
+double deal(double a1,double b1,double a2,double b2,double r)	//a为经度 b为纬度，且都是弧度，r是球面半径
+{
+    return r*acos(cos(b1)*cos(b2)*cos(a1-a2)+sin(b1)*sin(b2));
+}

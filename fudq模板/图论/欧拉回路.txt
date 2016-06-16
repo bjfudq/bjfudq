@@ -1,0 +1,42 @@
+struct Edge{
+	int fro,to,next,val;
+}edge[N];
+int n,tot,res;
+int path[N],vis[N],head[N];
+
+//head数组记录一个点对应多个点的边信息，类似vector
+void add(int fro,int to,int val)
+{
+	edge[tot].val=val;
+	edge[tot].fro=fro;
+	edge[tot].to=to;
+	edge[tot].next=head[fro];
+	head[fro]=tot++;
+}
+
+void dfs(int t)
+{
+	for(int i=head[t];i!=-1;i=edge[i].next)
+		if(!vis[edge[i].val])
+		{
+			vis[edge[i].val]=1;
+			dfs(edge[i].to);
+			path[res++]=edge[i].val;	//这里path记录边的权值
+		}
+}
+
+void solve()
+{
+	tot=0;res=0;
+	memset(head,-1,sizeof(head));
+	for(int i=0;i<n;i++)
+	{
+		scanf("%d%d%d",&a,&b,&c);
+		add(a,b,c);
+	}
+	MEM(vis);
+	dfs(0);
+	for(int i=res-1;i>=0;i--)	//倒序输出
+		printf("%d",path[i]);
+	printf("\n");
+}

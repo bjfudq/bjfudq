@@ -1,0 +1,63 @@
+#define N 1000010
+char s[N],temp[N];
+int nodeNum;
+const int childNum=26,base='a';
+struct TrieNode{
+    struct TrieNode *child[childNum];
+};
+
+void init(TrieNode *p)
+{
+    for(int i=0;i<childNum;i++)
+        p->child[i]=NULL;
+}
+
+void destroy(TrieNode *p)
+{
+    if(p!=NULL)
+    {
+        for(int i=0;i<childNum;i++)
+        {
+            if(p->child[i]!=NULL)
+                destroy(p->child[i]);
+        }
+    }
+    delete p;
+}
+
+void Insert(TrieNode *root,char *s)
+{
+    TrieNode *p=root;
+    int len=(int)strlen(s);
+    for(int i=0;i<len;i++)
+    {
+        if(p->child[s[i]-base]==NULL)
+        {
+            p->child[s[i]-base]=new TrieNode();
+	    init(p->child[s[i]-base]);
+            nodeNum++;
+        }
+        p=p->child[s[i]-base];
+    }
+}
+
+int main()
+{
+    int len;
+    TrieNode *root;
+    while(scanf("%s",s)!=EOF)
+    {
+        len=(int)strlen(s);
+        root=new TrieNode;
+        init(root);
+        nodeNum=0;
+        while(len--)
+        {
+            strcpy(temp,&s[len]);
+            Insert(root,temp);
+        }
+        printf("%d\n",nodeNum);
+        destroy(root);
+    }
+    return 0;
+}

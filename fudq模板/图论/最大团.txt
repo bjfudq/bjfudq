@@ -1,0 +1,60 @@
+问题描述：团就是最大完全子图。
+给定无向图G=(V,E)。如果U属于V，且对任意u，v属于U，有(u，v)属于E，则称U是G的完全子图。
+G 的完全子图U是G的团当且仅当U不包含在G的更大的完全子图中，即U就是最大完全子图。
+G 的最大团是指G中所含顶点数最多的团。
+
+//dp[i]:从i到n-1的最大的团
+//mx最后的结果
+//stk[i][j]:第i层中与之相连的第j大的标号
+//g[][]是邻接矩阵
+//res=cilque(n);
+
+int g[N][N],dp[N],stk[N][N],mx;
+
+//总共有n个数,dep代表当前的层数,ns代表于当前层相连的并且比ns大的标号的个数
+int dfs(int n,int ns,int dep)
+{
+	if(ns == 0)
+	{
+		if(dep > mx)
+			mx=dep;
+		return 1;
+	}
+	int k,p,cnt;
+	for(int i=0;i<ns;i++)
+	{
+		k=stk[dep][i];//与之相连的第i个点
+
+		if(dep+n-k <= mx)//当前层数+第k层下边的<=mx,则不再搜索
+			return 0;
+		if(dep+dp[k] <= mx)//当前层数+dp的最大的<=mx,不再搜索
+			return 0;
+
+		cnt=0;
+		for(int j=i+1;j<ns;j++)
+		{
+			p=stk[dep][j];//i后边的某个点
+			if(g[k][p])//如果i和j相连
+				stk[dep+1][cnt++]=p;//如果没有与之相连的,则cnt为0
+		}
+		dfs(n,cnt,dep+1);
+	}
+	return 1;
+}
+
+int clique(int n)
+{
+    int ns;
+    mx=0;
+    //dp用的,vertex: 0 ~ n-1
+    for(int i=n-1;i>=0;i--)
+    {
+        ns=0;
+        for(int j=i+1;j<n;j++)
+            if(g[i][j])
+                stk[1][ns++]=j;
+        dfs(n,ns,1);
+        dp[i]=mx;
+    }
+    return mx;
+}

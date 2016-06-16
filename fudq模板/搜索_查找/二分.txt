@@ -1,0 +1,29 @@
+二分查找分以下两类（以数组 a[] = {1, 2, 2, 4, 4, 8, 10} 为例）：
+第一类：
+能找到且返回最左边的数的位置（如查找4的时候返回位置3）
+不能找到且返回右边与其接近的数的位置（如查找3的时候返回位置3）
+
+int binsearch(int a[], int lef, int rig, int e) {
+	while (lef <= rig) {
+		int mid = (lef + rig) >> 1;
+		if(a[mid] >= e) rig = mid - 1;
+		else lef = mid + 1;
+	}
+	return lef;
+}
+
+第二类：
+能找到且返回最右边的数的位置（如查找4的时候返回位置4）
+不能找到且返回左边与其接近的数的位置（如查找3的时候返回位置2）
+
+int binsearch(int a[], int lef, int rig, int e) {
+	while (lef <= rig) {
+		int mid = (lef + rig) >> 1;
+		if(a[mid] > e) rig = mid - 1;
+		else lef = mid + 1;
+	}
+	return rig;
+}
+
+参考来自:
+http://blog.csdn.net/int64ago/article/details/7425727

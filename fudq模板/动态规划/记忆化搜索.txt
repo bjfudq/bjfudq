@@ -1,0 +1,82 @@
+//hdu 1078
+给出一个n*n的矩阵，每个格子上的数代表奶酪数，起始位置在(0, 0)。每次可以水平或者垂直走，最多走k个单位，要求目标位的奶酪数要比当前位的多。每次到一个地方就把当前的奶酪都吃掉，问最多可以吃掉多少奶酪。
+从(0,0)开始搜索，能获取的最多奶酪数等于当前奶酪数+下一步能搜到的最多奶酪数。
+
+#define N 110
+int n,k,f[N][N],ans[N][N];
+int dir[4][2]={{1,0},{-1,0},{0,1},{0,-1}};
+
+int dfs(int x,int y)
+{
+	if(ans[x][y] != -1)
+		return ans[x][y];
+	int s=0;
+	for(int i=0;i<4;i++)
+		for(int j=1;j<=k;j++)
+		{
+			int tx=x+dir[i][0]*j;
+			int ty=y+dir[i][1]*j;
+			if(tx>=0 && ty>=0 && tx<n && ty<n && f[tx][ty]>f[x][y])
+				s=max(s,dfs(tx,ty));
+		}
+	ans[x][y]=s+f[x][y];
+	return ans[x][y];
+}
+
+int main()
+{
+    while(scanf("%d%d",&n,&k)!=EOF)
+    {
+    	if(n==-1 && k==-1)
+    		break;
+    	for(int i=0;i<n;i++)
+    		for(int j=0;j<n;j++)
+    			scanf("%d",&f[i][j]);
+    	memset(ans,-1,sizeof(ans));
+    	printf("%d\n",dfs(0,0));
+    }
+    return 0;
+}
+
+
+//hdu 1978
+控制一个机器人从一个棋盘的起始点(1,1)走到棋盘的终点(n,m)，机器人一开始在棋盘的起始点并有起始点所标有的能量，只能往下或者右走，走一次消耗一单位能量，不能停留原地，当选择了一条可行路径后，当他走到这条路径的终点时，他将只有终点所标记的能量。（机器人不一定要走到没能量了才停止，可以在中途停下换路径）问有多少种情况。
+
+#define N 110
+int n,m,f[N][N],ans[N][N];
+
+int dfs(int x,int y)
+{
+    if(x>n || x<0 || y>m || y<0)
+        return 0;
+    if(x==n-1 && y==m-1)
+        return 1;
+    if(ans[x][y] != -1)
+        return ans[x][y];
+    int s=0;
+    for(int i=0;i<=f[x][y];i++)
+        for(int j=0;j+i <= f[x][y];j++)
+        {
+            if(i==0 && j==0)
+                continue;
+            s=(s+dfs(x+i,y+j))%10000;
+        }
+    ans[x][y]=s;
+    return s;
+}
+
+int main()
+{
+    int t;
+    scanf("%d",&t);
+    while(t--)
+    {
+        scanf("%d%d",&n,&m);
+        for(int i=0;i<n;i++)
+            for(int j=0;j<m;j++)
+                scanf("%d",&f[i][j]);
+        memset(ans,-1,sizeof(ans));
+        printf("%d\n",dfs(0,0));
+    }
+    return 0;
+}

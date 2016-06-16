@@ -1,0 +1,113 @@
+树状数组：
+用数组d[i]记录i点管辖范围内的和，则有：
+d[1]=a[1];
+d[2]=a[1]+a[2];
+d[3]=a[3];
+d[4]=a[1]+a[2]+a[3]+a[4];
+d[5]=a[5];
+d[6]=a[5]+a[6];
+d[7]=a[7];
+d[8]=a[1]+a[2]+a[3]+a[4]+a[5]+a[6]+a[7]+a[8];
+……
+可以发现第i个点管辖的数有2^k个，k表示i的二进制数从个位往高位看0的个数。
+这样的构成的树，适用于：
+对一个数组内部动态的修改（加，减，乘，除），删除，增加，或者高效求某个点或者某个区间的值；时间复杂度均为O(logN)。
+
+//求某个点的管辖范围
+int lowbit(int x)
+{
+     return x&(-x);    
+}
+用空间代替时间：
+int Lowbit[N];
+for (i = 1; i <= N; i++)
+	Lowbit[i] = i & (i ^ (i - 1));
+
+
+/*
+求数组的和的算法
+（1）首先，令sum=0，转向第二步；
+（2）接下来判断，如果 n>0 的话，就令sum=sum+cn转向第三步，否则的话，终止算法，返回 sum 的值；
+（3）n=n - lowbit（n）（将n的二进制表示的最后一个零删掉），回第二步。
+*/
+代码如下：
+int Sum(int n)
+{
+    int sum=0;
+    while(n>0)
+    {
+         sum+=c[n];
+         n=n-lowbit(n);
+    }    
+    return sum;
+}
+
+/*
+对数组中的元素做修改，算法如下（修改为给某个节点 i 加上 x ）：
+（1）当 i<=n 时，执行下一步；否则的话，算法结束;
+（2）ci=ci+x ，i=i+lowbit（i）（在 i 的二进制表示的最后加零），返回第一步。
+*/
+代码如下：
+
+void Update(int i,int x)
+{
+     while(i<=n)
+     {
+          c[i]=c[i]+x;
+          i=i+lowbit(i);
+     }
+}
+
+
+树状数组解区间更新 询问值问题
+//hdu 1556
+#define N 100010
+int ans[N];
+int n;
+int lowBit(int x)
+{
+    return x&-x;
+}
+
+int Sum(int x)
+{
+    int sum=0;
+    while(x > 0)
+    {
+        sum+=ans[x];
+        x-=lowBit(x);
+    }
+    return sum;
+}
+
+void Update(int x,int y)
+{
+    while(x<=n)
+    {
+        ans[x]+=y;
+        x+=lowBit(x);
+    }
+}
+
+int main()
+{
+    int a,b;
+    while(scanf("%d",&n)!=EOF && n)
+    {
+        memset(ans,0,sizeof(ans));
+        for(int i=0;i<n;i++)
+        {
+            scanf("%d%d",&a,&b);
+            Update(a,1);//先更新a到n之间的值加1
+            Update(b+1,-1);//再更新b+1到n之间的值减1
+        }
+        for(int i=1;i<=n;i++)
+        {
+        	if(i!=1)
+        		printf(" ");
+            printf("%d",Sum(i));//第i项值为1到i的和
+        }
+        printf("\n");
+    }
+    return 0;
+}

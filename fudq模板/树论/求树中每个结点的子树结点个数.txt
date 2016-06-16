@@ -1,0 +1,36 @@
+//一共n个结点，n-1条边，边信息存在容器里，f[]数组记录每个结点的子树结点个数，fat[]数组记录每个结点的父结点
+
+int n,f[N];
+int vis[N],fat[N];
+vector<int> s[N];
+
+int dfs(int tmp)
+{
+	int res=1;
+	for(int i=0;i<(int)s[tmp].size();i++)
+	{
+		int a=s[tmp][i];
+		if(!vis[a])
+		{
+			vis[a]=1;fat[a]=tmp;
+			res=res+dfs(a);
+		}
+	}
+	f[tmp]=res;
+	return res;
+}
+
+void solve()
+{
+	for(int i=0;i<=n;i++)
+		s[i].clear();
+	int a,b;
+	for(int i=1;i<n;i++)
+	{
+		scanf("%d%d",&a,&b);
+		s[a].push_back(b);
+		s[b].push_back(a);
+	}
+	MEM(vis);vis[1]=1;fat[1]=0;
+	a=dfs(1);
+}

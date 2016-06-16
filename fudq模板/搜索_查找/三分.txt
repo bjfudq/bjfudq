@@ -1,0 +1,24 @@
+三分适用于求凸性函数
+
+double Calc(double a)
+{
+	//根据题意计算
+}
+
+void solve(double sta,double end)
+{
+    double Left, Right;
+    double mid, midmid;
+    double mid_area, midmid_area;
+    Left = sta; Right = end;
+    while (Left + eps < Right)
+    {
+        mid = (Left + Right) / 2.0;
+        midmid = (mid + Right) / 2.0;
+        mid_area = Calc(mid);
+        midmid_area = Calc(midmid);
+        if (mid_area+eps < midmid_area) Right = midmid;	//小于求极小值，大于求极大值
+        else Left = mid;
+    }
+    printf("%.2lf %.2lf\n",mid,mid_area);
+}

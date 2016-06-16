@@ -1,0 +1,63 @@
+#define MAX 999999999
+#define N 1010
+int dis[N],n,m;
+int edge[N][N];
+bool vis[N];
+
+void SPFA(int s)
+{
+	int i,u;
+	memset(vis,false,sizeof(vis));
+	for(i=1;i<=n;i++)
+		dis[i]=MAX;
+	queue<int>Q;
+	Q.push(s);
+	vis[s]=true;
+	dis[s]=0;
+	while(!Q.empty())
+	{
+		u=Q.front();
+		Q.pop();
+		vis[u]=false;
+		for(i=1;i<=n;i++)
+		{
+			if(dis[i]>dis[u]+edge[u][i])
+			{
+				dis[i]=dis[u]+edge[u][i];
+				if(!vis[i])
+				{
+					vis[i]=true;
+					Q.push(i);
+				}
+			}
+		}
+	}
+}
+
+int main()
+{
+    int i,j,a,b,c;
+    while(scanf("%d%d",&n,&m)!=EOF&&(n||m))
+    {
+        for(i=0;i<=N;i++){
+            for(j=0;j<=i;j++)
+            {
+                edge[i][j]=MAX;
+                edge[j][i]=MAX;
+            }
+        }
+        for(i=0;i<m;i++)
+        {
+            scanf("%d %d %d",&a,&b,&c);
+            if(edge[a][b]>c)
+            {
+                edge[a][b]=c;
+                edge[b][a]=c;
+            }
+        }
+
+        SPFA(1);
+        printf("%d\n",dis[n]);
+    }
+    return 0;
+}

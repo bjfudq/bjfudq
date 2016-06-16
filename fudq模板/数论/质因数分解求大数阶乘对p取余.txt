@@ -1,0 +1,67 @@
+//还可以求类似这样的问题：((n+1)!/(m!))%p
+//还有卡特兰数 ((2n)!/((n+1)!*n!))%p
+int tot,prime[N+10],f[N+10];
+
+//打印素数表
+void Getprime()
+{
+	memset(f,0,sizeof(f));
+	tot=0;
+	for(int i=2;i<=N;i++)
+	{
+		if(f[i] == 0)
+			prime[tot++]=f[i]=i;
+		for(int j=0;j<tot && prime[j]<=f[i] && i*prime[j]<=N;j++)
+			f[i*prime[j]]=prime[j];
+	}
+}
+
+//快速幂取余
+LL mod_exp(LL a,LL b,LL c)
+{
+	LL ans=1;
+	while(b)
+	{
+		if(b & 1)
+			ans=ans*a%c;
+		a=a*a%c;
+		b/=2;
+	}
+	return ans;
+}
+
+int fun(int a,int b)
+{
+    int r=0;
+    while(a)
+    {
+        r=r+a/b;
+        a=a/b;
+    }
+    return r;
+}
+
+//对某个数的阶乘分解质因数，temp为0表示数的阶乘在分子上的，为1表示在分母上
+int work(int t,int p)
+{
+	int ans=1,nn=t*2;
+	for(int i=0;ans && i<tot && prime[i]<=nn;i++)	//判断ans是否为0 重要的剪枝
+	{
+		int g=fun(nn,prime[i]);
+		g-=fun(t+1,prime[i]);
+		g-=fun(t,prime[i]);
+		//此处可以添加，分子阶乘g加，分母阶乘g减
+		ans=(ans*mod_exp(prime[i],g,p))%p;
+	}
+	return ans;
+}
+
+
+int main()
+{
+	Getprime();
+	int n,p;
+	while(sf2(n,p)!=EOF)
+		printf("%d\n",work(n,p));
+	return 0;
+}

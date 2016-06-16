@@ -1,0 +1,74 @@
+KM算法求的是完备匹配下的最大权匹配： 在一个二分图内，左顶点为X，右顶点为Y，现对于每组左右连接XiYj有权wij，求一种匹配使得所有wij的和最大。
+/*
+ * 初始化：w[x][y]为邻接矩阵。不存在的边赋值为-INF
+ * 调用：KM(n,m,ans)n,m分别为x,y集合中的点数，n必须小于等于m。res为回传结果。
+ * 返回：false表示无完备匹配，true表示有完备匹配，且最佳匹配值为res
+ */
+
+
+int w[N][N];
+int lx[N], ly[N];
+int linky[N];
+int visx[N], visy[N];
+int lack;
+int m, n;
+
+bool find(int x, int n, int m)
+{
+	visx[x] = true;
+	for (int y = 0; y < m; y++)
+	{
+		if (visy[y])
+			continue;
+		int t = lx[x] + ly[y] - w[x][y];
+		if (t > 0)
+		{
+			lack = min(lack, t);
+			continue;
+		}
+		visy[y] = true;
+		if (linky[y] == -1 || find(linky[y], n, m))
+		{
+			linky[y] = x;
+			return true;
+		}
+	}
+	return false;
+}
+
+bool KM(int n, int m, int &res)
+{
+	memset(linky, -1, sizeof(linky));
+	memset(lx, 0, sizeof(lx));
+	memset(ly, 0, sizeof(ly));
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++)
+			if (w[i][j] > lx[i])
+				lx[i] = w[i][j]; //初始化顶标
+	for (int x = 0; x < n; x++)
+	{
+		while (true)
+		{
+			memset(visx, 0, sizeof(visx));
+			memset(visy, 0, sizeof(visy));
+			lack = INF;
+			if (find(x, n, m))
+				break;
+			for (int i = 0; i < n; i++)
+				if (visx[i])
+					lx[i] -= lack;
+			for (int i = 0; i < m; i++)
+				if (visy[i])
+					ly[i] += lack;
+		}
+	}
+	res = 0;
+	for (int i = 0; i < m; i++)
+	{
+//		if (w[linky[i]][i] <= -INF)
+//			return false;
+		if(linky[i] != -1)
+			res += w[linky[i]][i];
+	}
+	return true;
+}

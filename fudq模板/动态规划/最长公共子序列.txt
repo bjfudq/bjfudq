@@ -1,0 +1,32 @@
+何谓子序列？例如，序列Z={B，C，D，B}是序列X={A，B，C，B，D，A，B}的子序列，相应的递增下标序列为{2，3，5，7}。
+给定2个序列X和Y，当另一序列Z既是X的子序列又是Y的子序列时，称Z是序列X和Y的公共子序列。
+给定2个序列X={x1,x2,…,xm}和Y={y1,y2,…,yn}，找出X和Y的最长公共子序列。 
+
+解法：
+建立一个二维数组，从（0，0）处开始填表，填完为止，输出最后一个数，即是所求结果
+关系式为：
+if(a[i]==b[j])
+             f[i][j]=f[i-1][j-1]+1;
+else
+             f[i][j]=max{ f[i-1][j] , f[i][j-1] }; 
+
+#define N 1010
+char a[N],b[N];
+int f[N][N];
+
+int LCS(char a[],char b[])
+{
+	int i,j,len1,len2;
+	len1=(int)strlen(a);
+	len2=(int)strlen(b);
+	memset(f,0,sizeof(f));
+	for(i=1;i<=len1;i++)
+		for(j=1;j<=len2;j++)
+		{
+			if(a[i-1]==b[j-1])
+				f[i][j]=f[i-1][j-1]+1;
+			else
+				f[i][j]=max(f[i-1][j],f[i][j-1]);
+		}
+	return f[len1][len2];
+}

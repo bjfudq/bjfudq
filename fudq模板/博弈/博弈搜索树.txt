@@ -1,0 +1,73 @@
+博弈搜索树：
+如果后继状态中有必败态，则当期状态必胜；
+如果后继状态中没有必败态，则当期状态必败。
+
+//hdu 4155
+有1到6各4张的牌堆，两个轮流取，取出来的牌累加，谁取出的牌后累加大于等于31即为输。
+现已知游戏进行的前几个回合，问继续游戏，谁能获胜。
+
+char str[32];
+int p[12];
+
+int dfs(int tmp)
+{
+	if(tmp >= 31)
+		return 0;
+	for(int i=1;i<=6;i++)
+	{
+		if(p[i] && tmp+i <= 31)
+		{
+			p[i]--;
+			int t=dfs(tmp+i);
+			p[i]++;
+			if(t == 0)
+				return 1;
+		}
+	}
+	return 0;
+}
+
+int main()
+{
+    while(sfs(str)!=EOF)
+    {
+    	printf("%s",str);
+    	pfk;
+    	for(int i=1;i<7;i++)
+    		p[i]=4;
+    	int len=LEN(str);
+    	int t=0;
+    	fr(len){
+    		p[str[i]-'0']--;
+   			t=t+str[i]-'0';
+    	}
+		int r=dfs(t);
+    	if(len&1)
+    	{
+    		if(r == 1) pfs("B");
+    		else pfs("A");
+    	}
+    	else
+    	{
+    		if(r == 1) pfs("A");
+    		else pfs("B");
+    	}
+    }
+    return 0;
+}
+
+/*
+Input:
+356656
+35665
+3566
+111126666
+552525
+
+Output:
+356656 B
+35665 B
+3566 A
+111126666 A
+552525 A
+*/

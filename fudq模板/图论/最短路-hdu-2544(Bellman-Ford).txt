@@ -1,0 +1,63 @@
+const int N = 205;
+const int M = 20005;
+const int MAX = 1000000000;
+
+int dis[N];
+struct edge
+{
+    int u;
+    int v;
+    int w;
+}e[M];
+
+void init(int vs, int s)
+{
+    for (int i=1; i<=vs; ++i)
+    	dis[i] = MAX;
+    dis[s] = 0;
+    return ;
+}
+
+bool relax(int u, int v, int w)
+{
+    if (dis[v] > dis[u] + w)
+    {
+    	dis[v] = dis[u] + w;
+    	return true;
+    }
+    return false;
+}
+
+void bellmanFord(int es, int vs, int s)
+{
+	//es表示边数，vs表示点数，s表示起点
+    init(vs, s);
+    int flag;
+    for (int i=1; i<vs; ++i)
+    {
+    	flag=false;
+    	for (int j=0; j<es; ++j)
+        	if(relax(e[j].u, e[j].v, e[j].w))
+        		flag=true;
+    	if(!flag)
+    		return ;
+    }
+}
+
+int main()
+{
+    int n, m;
+    while (scanf("%d%d", &n, &m), n+m)
+    {
+        for (int i=0; i<m; ++i)
+        {
+            scanf ("%d%d%d", &e[i].u, &e[i].v, &e[i].w);
+            e[m+i].u = e[i].v;
+            e[m+i].v = e[i].u;
+            e[m+i].w = e[i].w;
+        }
+        bellmanFord(m<<1, n, 1);
+        printf ("%d\n", dis[n]);
+    }
+    return 0;
+}

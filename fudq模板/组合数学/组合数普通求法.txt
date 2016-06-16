@@ -1,0 +1,14 @@
+//适用于n和r都比较小的情况
+int com(int n,int r) //C(n, r)
+{
+	if(n-r > r)
+		r=n-r;
+	int s=1;
+	for(int i=0,j=1;i<r;i++)
+	{
+		s*=(n-i);
+		for(;j<=r && s%j == 0;j++)
+			s/=j;
+	}
+	return s;
+}

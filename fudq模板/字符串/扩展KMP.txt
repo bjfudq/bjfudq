@@ -1,0 +1,156 @@
+/*
+* 扩展KMP算法
+*/
+//next[i]:x[i...m-1]与x[0...m-1]的最长公共前缀
+//extend[i]:y[i...n-1]与x[0...m-1]的最长公共前缀
+void pre_EKMP(char x[],int m,int next[])
+{
+	next[0]=m;
+	int j=0;
+	while(j+1 < m && x[j] == x[j+1])
+		j++;
+	next[1]=j;
+	int k=1;
+	for(int i=2;i<m;i++)
+	{
+		int p=next[k]+k-1;
+		int L=next[i-k];
+		if(i+L < p+1)
+			next[i]=L;
+		else
+		{
+			j=max(0,p-i+1);
+			while(i+j < m && x[i+j] == x[j])
+				j++;
+			next[i]=j;
+			k=i;
+		}
+	}
+}
+
+//x是模式串，y是主串
+void EKMP(char x[],int m,char y[],int n,int next[],int extend[])
+{
+	pre_EKMP(x,m,next);
+	int j=0;
+	while(j < n && j < m && x[j] == y[j])
+		j++;
+	extend[0]=j;
+	int k=0;
+	for(int i=1;i < n;i++)
+	{
+		int p=extend[k]+k-1;
+		int L=next[i-k];
+		if(i+L < p+1)
+			extend[i]=L;
+		else
+		{
+			j=max(0,p-i+1);
+			while(i+j < n && j < m && y[i+j] == x[j])
+				j++;
+			extend[i]=j;
+			k=i;
+		}
+	}
+}
+
+
+
+//hdu4333
+//题意：给定一个数(最大10^100000)，依次把最后一位数放到最前面，构成一个新的数，求有多少个数大于、小于和等于原来的数
+//题解：先把原来数扩充一倍，然后根据扩展KMP比较(比较扩展KMP的下一位即可)。
+//最后需要去重，只有原来的串有循环节的时候才会有重复串，用KMP的next数组求出最小循环节，用长度除以最小循环节得到循环节个数
+char x[N*2],y[N*2];
+int next[N*2],extend[N*2];
+
+void pre_EKMP(char x[],int m,int next[])
+{
+	next[0]=m;
+	int j=0;
+	while(j+1 < m && x[j] == x[j+1])
+		j++;
+	next[1]=j;
+	int k=1;
+	for(int i=2;i<m;i++)
+	{
+		int p=next[k]+k-1;
+		int L=next[i-k];
+		if(i+L < p+1)
+			next[i]=L;
+		else
+		{
+			j=max(0,p-i+1);
+			while(i+j < m && x[i+j] == x[j])
+				j++;
+			next[i]=j;
+			k=i;
+		}
+	}
+}
+
+void EKMP(char x[],int m,char y[],int n,int next[],int extend[])
+{
+	pre_EKMP(x,m,next);
+	int j=0;
+	while(j < n && j < m && x[j] == y[j])
+		j++;
+	extend[0]=j;
+	int k=0;
+	for(int i=1;i < n;i++)
+	{
+		int p=extend[k]+k-1;
+		int L=next[i-k];
+		if(i+L < p+1)
+			extend[i]=L;
+		else
+		{
+			j=max(0,p-i+1);
+			while(i+j < n && j < m && y[i+j] == x[j])
+				j++;
+			extend[i]=j;
+			k=i;
+		}
+	}
+}
+
+void kmp_pre(char x[],int len) {
+	int i, j;
+	j = next[0] = -1;
+	i = 0;
+	while (i < len) {
+		while (-1 != j && x[i] != x[j])
+			j = next[j];
+		next[++i] = ++j;
+	}
+}
+
+
+int main()
+{
+    int T,cas=1;
+    sf(T);
+    while(T--)
+    {
+    	printf("Case %d: ",cas++);
+    	sfs(x);
+    	int m=LEN(x);
+    	int n=m*2;
+    	strcpy(y,x);
+    	strcat(y,x);
+    	EKMP(x,m,y,n,next,extend);
+    	int s1=0,s2=0,s3=0;
+    	for(int i=0;i<m;i++)
+    	{
+    		if(extend[i] >= m)
+    			s2++;
+    		else if(y[i+extend[i]] < x[extend[i]])
+    			s1++;
+    		else
+    			s3++;
+    	}
+    	kmp_pre(x,m);
+    	int tmp=m%(m-next[m])==0?m/(m-next[m]):1;	//去重
+    	printf("%d %d %d\n",s1/tmp,s2/tmp,s3/tmp);
+    }
+	return 0;
+}

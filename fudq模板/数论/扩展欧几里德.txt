@@ -1,0 +1,27 @@
+//求一组x,y使得 a*x+b*y=gcd(a,b)，返回的是gcd(a,b)
+//如果求x的最小正整数解，如果x不大于0，则令x=x+b/g, y=y-a/g
+int extend_gcd(int a,int b,int &x,int &y)
+{
+	if(b == 0)
+	{
+		x=1;y=0;
+		return a;
+	}
+	int t,d;
+	d=extend_gcd(b,a%b,x,y);
+	t=x;x=y;y=t-a/b*y;
+	return d;
+}
+
+//线性方程定理，利用一组解求出a*x+b*y=gcd(a,b)的其它解，k可为任意整数
+void solve(int a,int b)
+{
+	int x,y,g,x1,y1;
+	g=extend_gcd(a,b,x,y);
+	for(int k=0;k<10;k++)
+	{
+		x1=x+b/g*k;
+		y1=y-a/g*k;
+		printf("%d %d\n",x1,y1);
+	}
+}

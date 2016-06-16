@@ -1,0 +1,34 @@
+LCA离线Tarjan算法：
+存储树的时候存储的是单向边：
+伪代码如下：
+
+Tarjan(u)
+	fa[u] = u
+	循环u的每个孩子v
+		if vis[v] == 0
+			Tarjan(v)
+			fa[v] = u;
+	vis[u] = 1
+	循环u相关的每个询问(u,v)
+		if vis[v] == 1
+			求u和v的LCA为 Find(v)
+vis[u] = 1 写在中间不会出现死循环，这样可以避免重复计算LCA
+
+
+存储树的时候存储的是双向边：
+伪代码如下：
+
+Tarjan(u)
+	vis[u] = 1
+	fa[u] = u
+	循环u的每个孩子v
+		if vis[v] == 0
+			Tarjan(v)
+			fa[v] = u;
+	循环u相关的每个询问(u,v)
+		if vis[v] == 1
+			求u和v的LCA为 Find(v)
+vis[u] = 1 写在中间不会出现死循环，这样可以避免重复计算LCA
+
+
+另外，可以用两个不同的标记数组标记访问次序可以完全解决这个问题。

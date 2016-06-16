@@ -1,0 +1,81 @@
+/*
+ *      输入主串和模式串，如果模式串在主串中匹配，则返回模式串在主串中的首位置，否则输出No
+ */
+#define N 10001
+char s1[N],s2[N];//s1为主串，s2为模式串
+int next[N];
+
+void getnext(int next[],char s[])
+{
+	int len,i=0,j=-1;
+	next[0]=-1;
+	len=(int)strlen(s);
+	while(i<len)
+	{
+		if(j==-1 || s[i]==s[j])
+		{
+			i++;j++;
+			if(s[i] != s[j])//优化
+				next[i]=j;
+			else
+				next[i]=next[j];
+		}
+		else
+			j=next[j];
+	}
+}
+
+int KMP(char s1[],char s2[],int next[])
+{
+//返回模式串在主串中出现的首位置
+	int i,j,len1,len2;
+	i=0;j=0;
+	len1=(int)strlen(s1);
+	len2=(int)strlen(s2);
+	while(i<len1 && j<len2)
+	{
+		if(j<0||s1[i]==s2[j])
+		{
+			i++;j++;
+		}
+		else
+			j=next[j];
+	}
+	if(j==len2)
+		return i-j;
+	return 0;
+}
+
+int KMP(char s1[],char s2[],int next[])
+{
+	//返回最长相同的主串后缀和模式串前缀
+	int i,j,len1,len2;
+	i=0;j=0;
+	len1=(int)strlen(s1);
+	len2=(int)strlen(s2);
+	while(i<len1)
+	{
+		if(j<0 || s1[i]==s2[j])
+		{
+			i++;j++;
+		}
+		else
+			j=next[j];
+	}
+	return j;
+}
+
+int main()
+{
+	int ans;
+	while(scanf("%s %s",s1,s2)!=EOF)
+	{
+		getnext(next,s2);
+		ans=KMP(s1,s2,next);
+		if(ans!=0)
+			printf("%d\n",ans+1);
+		else
+			printf("No!\n");
+	}
+	return 0;
+}

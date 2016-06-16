@@ -1,0 +1,44 @@
+#define N 10010
+int f[N];
+
+//结点标号从1到n，若有不同自行改正
+void init(int n)
+{
+	for(int i=1;i<=n;i++)
+		f[i]=i;
+}
+
+int Find(int a)
+{
+	if(a != f[a])
+		f[a]=Find(f[a]);
+	return f[a];
+}
+
+void Merge(int x,int y)
+{
+	int fx,fy;
+	fx=Find(x);
+	fy=Find(y);
+	if(fx != fy)
+		f[fx]=fy;
+}
+
+int main()
+{
+	int n,m,a,b,i,res;
+	while(scanf("%d%d",&n,&m)!=EOF)
+	{
+		init(n);
+		while(m--)
+		{
+			scanf("%d%d",&a,&b);
+			Merge(a,b);
+		}
+		for(res=0,i=1;i<=n;i++)
+			if(i == f[i])
+				res++;
+		printf("%d\n",res);
+	}
+    return 0;
+}

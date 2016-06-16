@@ -1,0 +1,56 @@
+Biginteger的常见操作函数：
+加减乘除函数：add,subtract,multiply,divide
+取模函数：mod
+比较数是否相等函数：equals,返回true或者false
+比较数大小函数：compareTo,返回大于0，小于0，等于0
+取较大值或者较小值函数：max,min
+求幂乘函数：pow
+求最大公约数函数：gcd
+求绝对值函数：abs
+
+/*BigDecimal类的stripTrailingZeros()函数：去除结果的后缀0
+BigDecimal类的toPlainString()函数与toString()函数区别:如果数很大很大，前者输出的是完整的结果，后者输出的是科学计数法
+例：
+BigDecimal b ;（b=（0.4321^20)
+若String s = b.toPlainString() ;
+System.out.println(s) ; 
+输出为：
+0.00000005148554641076956121994511276767154838481760200726351203835429763013462401
+若String s = b.toString() ;
+输出为：
+5.148554641076956121994511276767154838481760200726351203835429763013462401E-8
+*/
+
+import java.io.*;
+import java.util.*;
+import java.math.*;
+
+public class Main
+{
+	public static void main(String[] args)
+	{
+		Scanner cin=new Scanner(System.in);
+		String str;
+		BigInteger a,ans,t;			//定义BigInteger类型和String类型
+		BigInteger base=BigInteger.valueOf(26);	//base初始化为整数的26
+		BigInteger f[]=new BigInteger[110];	//定义大小为26的BigInteger数组
+		
+		while(cin.hasNext())			//当有数据输入时
+		{
+			str=cin.next();			//读取一个String类型（BigInteger）的数据
+			t=cin.nextBigInteger();
+			int len=str.length();		//len代表str的长度
+			int i=5;
+			char temp=str.charAt(i);	//取string类型的第i个字符
+			a=new BigInteger(str);		//将String类型的str转成BigInteger类型的a
+			int p=Integer.parseInt(str,10);	//将str转成十进制的整数p
+			char k=(char)(p);		//将整数p转成char类型的k
+			str=ans.toString();		//将BigInteger类型的ans转成String类型的str
+			System.out.print(k);		//输出k
+			System.out.println(k);		//输出k并回车
+			System.out.println();		//输出回车
+
+		}
+	}
+}
+

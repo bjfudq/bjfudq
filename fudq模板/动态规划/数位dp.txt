@@ -1,0 +1,35 @@
+int num[35],f[35][3];
+
+int dfs(int pos,int s,int e)	//pos表示当前处理的位置，s表示状态，e表示是否有上界
+{
+	if(pos == -1)
+		return s == final_status;	//final_status表示最终状态
+	if(!e && f[pos][s]!=-1)		//如果没有限制，且已经搜过则返回
+		return f[pos][s];
+	int res=0;
+	int u=e?num[pos]:9;	//取当前最大能取的数
+	for(int d=0;d<=u;d++)
+	{
+		int t=s;
+		/*
+		* 更新状态t
+		*/
+		res+=dfs(pos-1,t,e && d==u);
+	}
+	if(!e)
+		f[pos][s]=res;
+	return res;
+}
+
+//求出0到a之间符合条件的个数
+int solve(int a)
+{
+	memset(f,-1,sizeof(f));
+	int len=0;
+	while(a)
+	{
+		num[len++]=a%10;
+		a/=10;
+	}
+	return dfs(len-1,0,1);
+}

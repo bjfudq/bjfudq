@@ -1,0 +1,25 @@
+//数组a前n个元素排序:shellsort(n,a)
+void shellsort(int n,int a[])
+{
+	int i,j,k;
+	for(i=n;i>=1;i--)
+		a[i]=a[i-1];
+	k=n/2;
+	while(k>=1)
+	{
+		for(i=k+1;i<=n;i++)
+		{
+			a[0]=a[i];
+			j=i-k;
+			while(a[j] > a[0] && j>=0)	//'>'升序，'<'降序
+			{
+				a[j+k]=a[j];
+				j=j-k;
+			}
+			a[j+k]=a[0];
+		}
+		k=k/2;
+	}
+	for(i=0;i<n;i++)
+		a[i]=a[i+1];
+}

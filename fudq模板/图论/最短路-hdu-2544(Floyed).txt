@@ -1,0 +1,46 @@
+#define inf 0x3f3f3f3f
+int n,m,p,q;
+int f[110][110];
+
+void floyed() 
+{ 
+	int i,j,k;			
+	for(k=1;k<=n;k++) 
+	{
+		for(i=1;i<=n;i++) 
+		{
+			for(j=1;j<=n;j++) 
+			{
+				if(f[i][k]+f[k][j]<f[i][j]) 
+					f[i][j]=f[i][k]+f[k][j]; 
+			}
+		}
+	}
+	if(f[1][n]==inf)
+		printf("0\n"); 
+	else 
+		printf("%d\n",f[1][n]);
+}
+
+int main()
+{
+	int i,a,b,c;
+	while(scanf("%d%d",&n,&m)!=EOF)
+	{
+		if(n==0 && m==0)
+			break;
+		for(p=1;p<=n;p++)
+		{
+			for(q=1;q<=n;q++)
+				f[p][q]=inf;
+		}
+		for(i=1;i<=m;i++)
+		{
+			scanf("%d%d%d",&a,&b,&c);
+			f[a][b]=c;
+			f[b][a]=c;
+		}
+		floyed(); 
+	}
+	return 0;
+}

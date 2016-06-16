@@ -1,0 +1,28 @@
+int extend_gcd(int a,int b,int &x,int &y)
+{
+	if(b == 0)
+	{
+		x=1;y=0;
+		return a;
+	}
+	int t,d;
+	d=extend_gcd(b,a%b,x,y);
+	t=x;x=y;y=t-a/b*y;
+	return d;
+}
+
+//线性同余式定理解方程 a*x = c(mod m)
+void mod_equ(int a,int c,int m)
+{
+	int g,x,y,x1,ans;
+	g=extend_gcd(a,m,x,y);
+	if(c%g!=0)
+		return ;
+	x1=((c/g*x)%m+m)%m;
+	for(int i=0;i<g;i++)
+	{
+		ans=x1+m/g*i;
+		ans=(ans+m)%m;
+		printf("%d\n",ans);
+	}
+}
