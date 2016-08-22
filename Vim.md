@@ -20,6 +20,45 @@
 ```
 按 `ESC`，输入 `:wq` 保存并退出。
 
+解释：
+1. 设置制表符宽度
+```
+:set tabstop=4
+:set softtabstop=4
+```
+2. 设置缩进的空格数
+```
+:set shiftwidth=4
+```
+3. 每行的缩进值与上一行相等
+```
+:set autoindent
+```
+4. 使用 `C/C++` 的自动缩进
+```
+:set cindent
+```
+5. 显示行号
+```
+:set nu
+```
+6. 搜索内容反白
+```
+:set hlsearch
+```
+7. 删除任意值
+```
+:set backspace=2
+```
+8. 语法高亮显示
+```
+:syntax on
+```
+9. 自动缩进
+```
+:set smartindent
+```
+
 #### 光标命令
 `h` 向左
 
@@ -83,9 +122,9 @@
 
 `:s/temp/str/g` 替换当前行所有 `temp` 为 `str`
 
-`:n, \$s/temp/str/` 替换第 `n` 行开始到最后一行中每一行的第一个 `temp` 为 `str`
+`:n, $s/temp/str/` 替换第 `n` 行开始到最后一行中每一行的第一个 `temp` 为 `str`
 
-`:n, \$s/temp/str/g` 替换第 `n` 行开始到最后一行中每一行所有 `temp` 为 `str`，`n` 为数字，若 `n` 为 `.`，表示从当前行开始到最后一行
+`:n, $s/temp/str/g` 替换第 `n` 行开始到最后一行中每一行所有 `temp` 为 `str`，`n` 为数字，若 `n` 为 `.`，表示从当前行开始到最后一行
 
 `:%s/temp/str/`（等同于 `:g/temp/s//str/`） 替换每一行的第一个 `temp` 为 `str`
 

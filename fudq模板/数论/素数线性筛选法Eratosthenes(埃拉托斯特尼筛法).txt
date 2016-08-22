@@ -1,31 +1,26 @@
 int tot,prime[N+10],f[N+10];
 
 //高效方法，时间复杂度O(N)
-void Getprime()
-{
-	memset(f,0,sizeof(f));
-	tot=0;
-	for(int i=2;i<=N;i++)
-	{
+void Getprime() {
+	memset(f, 0, sizeof(f));
+	tot = 0;
+	for (int i = 2;i <= N; i++) {
 		if(f[i] == 0)
-			prime[tot++]=f[i]=i;
-		for(int j=0;j<tot && prime[j]<=f[i] && i*prime[j]<=N;j++)
-			f[i*prime[j]]=prime[j];
+			prime[tot++] = f[i] = i;
+		for (int j = 0; j < tot && prime[j] <= f[i] && i * prime[j] <= N; j++)
+			f[i*prime[j]] = prime[j];
 	}
 }
 
 //朴素方法，时间复杂度O(NlogN)
-void Getprime()
-{
-	memset(f,0,sizeof(f));
-	tot=0;
-	for(int i=2;i*i<=N;i++)
-	{
-		if(f[i] == 0)
-		{
-			prime[tot++]=i;
-			for(int j=1;j*i<=N;j++)
-				f[i*j]=1;
+void Getprime() {
+	memset(f, 0, sizeof(f));
+	tot = 0;
+	for (int i = 2; i * i <= N; i++) {
+		if (f[i] == 0) {
+			prime[tot++] = i;
+			for (int j = i; j * i <= N; j++)
+				f[i * j] = 1;
 		}
 	}
 }

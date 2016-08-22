@@ -60,9 +60,22 @@ done
 ```
 
 #### 有关字符串操作
-`s1=${str%_*}` #从左往右，取字符串 `str` 中第一个 `'_'` 前的子串
+`s1=${str%_*}` #从右往左，取字符串 `str` 中第一个 `'_'` 前的子串
 
-`s2=${str#*_}` #从右往左，取字符串 `str` 中第一个 `'_'` 后的子串
+`s1=${str%%_*}` #从右往左，取字符串 `str` 中最后一个 `'_'` 前的子串
+
+`s2=${str#*_}` #从左往右，取字符串 `str` 中第一个 `'_'` 后的子串
+
+`s2=${str##*_}` #从左往右，取字符串 `str` 中最后一个 `'_'` 后的子串
+
+判断字符串 `line` 中是否存在子串 `s1`：
+```
+echo $line | grep $s1
+```
+如果不需要输出 `line`：
+```
+echo $line | grep $s1 >/dev/null
+```
 
 [Bash 字符串操作小结](http://www.cnblogs.com/frydsh/p/3261012.html)
 
@@ -127,6 +140,24 @@ i=`expr $i + 1`
 if (($t%2 == 0)) #判断 t 能否被 2 整除
 ```
 
+#### 读入变量
+```
+read -p "input a word:" temp
+echo "the word you input is $temp"
+```
+
+#### 写入文件
+```
+echo "Hello" > test.txt    #将 Hello 写入文件 test.txt 中
+echo "World" >> test.txt    #将 World 追加到文件 test.txt 中
+```
+
+#### 脚本测试技巧
+如果脚本写好了，不是很确定，可以先输出来查看是否正确，例如：
+```
+echo "git mv a.txt b.txt"
+```
+
 #### LeetCode 193. Valid Phone Numbers
 用 bash 从文本文件 file.txt 里逐行读取电话号码。
 
@@ -150,4 +181,9 @@ if (($t%2 == 0)) #判断 t 能否被 2 整除
 ```
 cat file.txt | grep -Eo '^\([0-9]{3}\) [0-9]{3}-[0-9]{4}$|^([0-9]{3}-){2}[0-9]{4}$'
 ```
+
+`^` 匹配一行开头
+
+`$` 匹配一行末尾
+
 --------
