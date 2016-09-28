@@ -1,0 +1,95 @@
+struct Node {
+    int key, size;
+    Node *lef;
+    Node *rig;
+    Node(int key = 0) {
+        this->key = key;
+        size = 1;
+        lef = NULL;
+        rig = NULL;
+    }
+}*root;
+
+int Re_size(Node *&cur) {
+    if (cur == NULL) {
+        return 0;
+    }
+    return cur->size;
+}
+
+void rotate(Node *&cur, int dir) {
+    if (dir) {
+        Node *son = cur->lef;
+        cur->lef = son->rig;
+        son->rig = cur;
+        son->size = cur->size;
+        cur->size = Re_size(cur->lef) + Re_size(cur->rig) + 1;
+        cur = son;
+    } else {
+        Node *son = cur->rig;
+        cur->rig = son->lef;
+        son->lef = cur;
+        son->size = cur->size;
+        cur->size = Re_size(cur->lef) + Re_size(cur->rig) + 1;
+        cur = son;
+    }
+}
+
+void maintain(Node *&cur, bool dir) {
+    if (dir) {
+        if (Re_size(cur->rig->rig) > Re_size(cur->lef)) {
+            rotate(cur, false);
+        } else if (Re_size(cur->rig->lef) > Re_size(cur->lef)) {
+            rotate(cur->rig, true);
+            rotate(cur, false);
+        } else {
+            return;
+        }
+    } else {
+        if (Re_size(cur->lef->lef) > Re_size(cur->rig)) {
+            rotate(cur, true);
+        } else if (Re_size(cur->lef->rig) > Re_size(cur->rig)) {
+            rotate(cur->lef, false);
+            rotate(cur, true);
+        }
+    }
+}
+
+void insert(Node *&cur, int &key) {
+    if (cur == NULL) {
+        cur = new Node(key);
+        return;
+    }
+    ++cur->size;
+    if (key <= cur->key) {
+        insert(cur->lef, key);
+    } else {
+        insert(cur->rig, key);
+    }
+    maintain(cur, key > cur->key);
+}
+
+int erase(Node *&cur, int key) {
+    cur->size -= 1;
+    int ret;
+    if (cur->key == key || (cur->key > key && !cur->lef) || (cur->key <= key && !cur->rig)) {
+        ret = cur->key;
+        if (cur->lef && cur->rig) {
+            cur->key = erase(cur->lef, cur->key + 1);
+        } else {
+            Node *d = cur;
+            if (cur->lef) {
+                cur = cur->lef;
+            } else {
+                cur = cur->rig;
+            }
+            delete d;
+        }
+    } else {
+        if (cur->key > key)
+            return erase(cur->lef, key);
+        else
+            return erase(cur->rig, key);
+    }
+    return ret;
+}
