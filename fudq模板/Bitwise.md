@@ -16,7 +16,7 @@
 
 ---
 
-#### Check if the integer is even or odd.
+#### 1. Check if the integer is even or odd.
 
 判断整数奇偶性。
 
@@ -47,7 +47,7 @@ else {
 
 ---
 
-####  Test if the n-th bit is set.
+#### 2. Test if the n-th bit is set.
 
 查看整数的第 n 位上是否是 1。
 
@@ -84,7 +84,7 @@ else {
 
 ---
 
-#### Set the n-th bit.
+#### 3. Set the n-th bit.
 
 将整数 x 的第 n 位设为 1。
 
@@ -116,7 +116,7 @@ y = x | (1 << n)
 
 ---
 
-#### Unset the n-th bit.
+#### 4. Unset the n-th bit.
 
 将整数 x 的第 n 位设为 0。
 
@@ -135,7 +135,7 @@ y = x & ~(1 << n)
 
 ---
 
-#### Toggle the n-th bit.
+#### 5. Toggle the n-th bit.
 
 将整数 x 的第 n 位取反。
 
@@ -163,7 +163,7 @@ y = x ^ (1 << n)
 
 ---
 
-#### Turn off the rightmost 1-bit.
+#### 6. Turn off the rightmost 1-bit.
 
 将 x 最右边的 1 设为 0。
 
@@ -202,7 +202,7 @@ y = x & (x - 1)
 
 ---
 
-#### Isolate the rightmost 1-bit.
+#### 7. Isolate the rightmost 1-bit.
 
 将 x 最右边的 1 单独取出来。
 
@@ -246,7 +246,7 @@ y = x & (-x)
 
 ---
 
-#### Right propagate the rightmost 1-bit.
+#### 8. Right propagate the rightmost 1-bit.
 
 将 x 最右边的 1 后面的 0 都置为 1。
 
@@ -290,7 +290,7 @@ y = x | (x - 1)
 
 ---
 
-#### Isolate the rightmost 0-bit.
+#### 9. Isolate the rightmost 0-bit.
 
 设 p 为整数 x 最右边 0 的位置，y 则为`1 << p`。
 
@@ -346,7 +346,7 @@ y = ~x & (x + 1)
 
 ---
 
-#### Turn on the rightmost 0-bit.
+#### 10. Turn on the rightmost 0-bit.
 
 将 x 最右边的 0 置为 1。
 
