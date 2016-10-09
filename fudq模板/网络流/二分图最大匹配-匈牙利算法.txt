@@ -1,33 +1,27 @@
-//n表示左边集合元素个数，m表示右边集合元素个数
+//n琛ㄧず宸﹁竟闆嗗悎鍏冪礌涓暟锛宮琛ㄧず鍙宠竟闆嗗悎鍏冪礌涓暟
 int n, m, mat[N];
-bool vis[N],f[N][N];
-bool dfs(int k)
-{
-	int t;
-	for (int i=0;i<m;i++)
-	{
-		if (f[k][i] && !vis[i])
-		{
-			vis[i]=true;
-			t=mat[i];
-			mat[i]=k;
-			if (t==-1 || dfs(t))
-				return true;
-			mat[i]=t;
-		}
-	}
-	return false;
+int vis[N],f[N][N];
+int dfs(int k) {
+    for (int i = 1; i <= m; i++) {
+        if (f[k][i] && !vis[i]) {
+            vis[i] = 1;
+            if (mat[i] == -1 || dfs(mat[i])) {
+                mat[i] = k;
+                return 1;
+            }
+        }
+    }
+    return 0;
 }
 
-int hungary()
-{
-	memset(mat,-1,sizeof(mat));
-	int ans=0;
-	for (int i=0;i<n;i++)
-	{
-		memset(vis,false,sizeof(vis));
-		if (dfs(i))
-			ans++;
-	}
-	return ans;
+int hungary() {
+    memset(mat, -1, sizeof(mat));
+    int ans = 0;
+    for (int i = 1; i <= n; i++) {
+        memset(vis, 0, sizeof(vis));
+        if (dfs(i)) {
+            ans++;
+        }
+    }
+    return ans;
 }
